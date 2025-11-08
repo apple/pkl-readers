@@ -1,0 +1,12 @@
+/.idea
+.run/
+*.pb.go
+out/
+.vscode/
+build/
+.env
+.out
+.cicd/
+test-results/
+.pkl-lsp
+.DS_Store

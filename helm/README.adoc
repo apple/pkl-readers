@@ -1,0 +1,68 @@
+= pkl-reader-helm
+
+pkl-reader-helm provides a Pkl library and link:https://pkl-lang.org/main/current/language-reference/index.html#external-readers[external resource reader] for integrating Pkl with link:https://helm.sh[Helm].
+
+== Setup
+
+CLI configuration:
+
+[source,bash]
+----
+--external-resource-reader reader+helm=pkl-reader-helm
+----
+
+PklProject configuration:
+
+[source,pkl]
+----
+evaluatorSettings {
+  externalResourceReaders {
+    ["reader+helm"] {
+      executable = "pkl-reader-helm"
+    }
+  }
+}
+----
+
+== Usage
+
+Basic usage:
+
+[source,pkl]
+----
+import "@helm/helm.pkl"
+import "@k8s/K8sResource.pkl"
+
+resources: Mapping<String, K8sResource> =
+  new helm.Template {
+      chart = "path/to/my/chart" // chart repo/name, oci:// URI, or absolute path on disk
+      version = "0.1.0"          // chart versions (if using OCI or repo, may be null)
+      releaseName = "my-release" // release name to use for the chart templates
+      namespace = "my-namespace" // namespace to use for the chart templates (see `helm template --namespace`)
+      values = new Dynamic {     // custom values to pass into the helm chart
+        image {
+          repository = "my-registry.example.com/nginx"
+        }
+      }
+    }.resources
+----
+
+Handle Kubernetes Custom Resources:
+
+[source,pkl]
+----
+import "@helm/helm.pkl"
+import "@k8s/K8sResource.pkl"
+import "@monitoring.coreos.com/v1/ServiceMonitor.pkl"
+
+
+resources: Mapping<String, K8sResource> =
+  new helm.Template {
+    // ...
+    customResourceTemplates {
+      [ServiceMonitor.kind] {
+        [ServiceMonitor.apiVersion] = new ServiceMonitor {}
+      }
+    }
+  }.resources
+----

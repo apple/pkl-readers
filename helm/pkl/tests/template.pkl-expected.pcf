@@ -1,0 +1,81 @@
+examples {
+  ["my-chart"] {
+    """
+    apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      labels:
+        helm.sh/chart: my-chart-0.1.0
+        app.kubernetes.io/name: my-chart
+        app.kubernetes.io/instance: my-release
+        app.kubernetes.io/version: 1.16.0
+        app.kubernetes.io/managed-by: Helm
+      name: my-release-my-chart
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        helm.sh/chart: my-chart-0.1.0
+        app.kubernetes.io/name: my-chart
+        app.kubernetes.io/instance: my-release
+        app.kubernetes.io/version: 1.16.0
+        app.kubernetes.io/managed-by: Helm
+      name: my-release-my-chart
+    spec:
+      ports:
+      - protocol: TCP
+        port: 80
+        name: http
+        targetPort: http
+      type: ClusterIP
+      selector:
+        app.kubernetes.io/name: my-chart
+        app.kubernetes.io/instance: my-release
+    ---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      labels:
+        helm.sh/chart: my-chart-0.1.0
+        app.kubernetes.io/name: my-chart
+        app.kubernetes.io/instance: my-release
+        app.kubernetes.io/version: 1.16.0
+        app.kubernetes.io/managed-by: Helm
+      name: my-release-my-chart
+    spec:
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: my-chart
+            app.kubernetes.io/instance: my-release
+        spec:
+          serviceAccountName: my-release-my-chart
+          securityContext: {}
+          containers:
+          - image: my-registry.example.com/nginx:1.16.0
+            imagePullPolicy: IfNotPresent
+            livenessProbe:
+              httpGet:
+                path: /
+                port: http
+            resources: {}
+            securityContext: {}
+            ports:
+            - protocol: TCP
+              name: http
+              containerPort: 80
+            name: my-chart
+            readinessProbe:
+              httpGet:
+                path: /
+                port: http
+      replicas: 1
+      selector:
+        matchLabels:
+          app.kubernetes.io/name: my-chart
+          app.kubernetes.io/instance: my-release
+    
+    """
+  }
+}

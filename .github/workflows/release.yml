@@ -1,0 +1,265 @@
+# Do not modify!
+# This file was generated from a template using https://github.com/StefMa/pkl-gha
+
+name: Release
+'on':
+  push:
+    branches-ignore:
+    - '**'
+    tags:
+    - '**'
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  check-format-pkl:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+    - name: Setup Pkl
+      id: setup-pkl
+      env:
+        PKL_VERSION: 0.30.0
+        PKL_FILENAME: pkl
+        PKL_DOWNLOAD_URL: https://github.com/apple/pkl/releases/download/0.30.0/pkl-linux-amd64
+      shell: bash
+      run: |-
+        DIR="$(mktemp -d /tmp/pkl-$PKL_VERSION-XXXXXX)"
+        PKL_EXEC="$DIR/$PKL_FILENAME"
+        curl -sfL -o $PKL_EXEC "$PKL_DOWNLOAD_URL"
+        chmod +x $PKL_EXEC
+        echo "$DIR" >> "$GITHUB_PATH"
+        echo "pkl_exec=$PKL_EXEC" >> "$GITHUB_OUTPUT"
+    - name: Check Go Formatting
+      run: pkl format --diff-name-only .
+  check-format-go:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+    - uses: actions/setup-go@v6
+      with:
+        go-version: '1.25'
+        check-latest: true
+        cache-dependency-path: go.work.sum
+    - name: Check Go Formatting
+      run: |-
+        go install mvdan.cc/gofumpt@v0.9.2
+        gofumpt -d .
+    - name: Check NOTICE.txt
+      run: |-
+        go install github.com/google/go-licenses/v2@v2.0.1
+        ./scripts/create_notice.sh
+        git diff --exit-code
+  check-license-headers:
+    name: hawkeye-check
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+    - run: hawkeye check --config licenserc.toml --fail-if-unknown
+    container:
+      image: ghcr.io/korandoru/hawkeye@sha256:c3ab994c0d81f3d116aabf9afc534e18648e3e90d7525d741c1e99dd8166ec85
+  test-helm:
+    name: Test - helm
+    if: startsWith(github.ref_name, 'helm@')
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+    - name: Setup Pkl
+      id: setup-pkl
+      env:
+        PKL_VERSION: 0.30.0
+        PKL_FILENAME: pkl
+        PKL_DOWNLOAD_URL: https://github.com/apple/pkl/releases/download/0.30.0/pkl-linux-amd64
+      shell: bash
+      run: |-
+        DIR="$(mktemp -d /tmp/pkl-$PKL_VERSION-XXXXXX)"
+        PKL_EXEC="$DIR/$PKL_FILENAME"
+        curl -sfL -o $PKL_EXEC "$PKL_DOWNLOAD_URL"
+        chmod +x $PKL_EXEC
+        echo "$DIR" >> "$GITHUB_PATH"
+        echo "pkl_exec=$PKL_EXEC" >> "$GITHUB_OUTPUT"
+    - uses: actions/setup-go@v6
+      with:
+        go-version: '1.25'
+        check-latest: true
+        cache-dependency-path: go.work.sum
+    - run: mkdir -p helm/test-results
+    - name: Run Go tests
+      working-directory: helm
+      run: |-
+        go install github.com/jstemmer/go-junit-report/v2@v2.1.0
+        echo "Running Go unit tests"
+        go test -race -v ./... 2>&1 | go-junit-report -iocopy -set-exit-code -out test-results/go-test-results.xml
+    - name: Run Pkl tests
+      working-directory: helm
+      run: pkl test --project-dir pkl --junit-reports test-results --external-resource-reader reader+helm='go run ./cmd/pkl-reader-helm/... --package-version-check=false'
+    - name: Upload Test Result XML
+      if: '!cancelled()'
+      uses: actions/upload-artifact@v5
+      with:
+        name: test-results-xml-test-helm
+        path: '*/test-results/**/*.xml'
+  build-helm:
+    runs-on: ubuntu-latest
+    steps:
+    - env:
+        GOOS: macos
+        GOARCH: amd64
+      working-directory: helm
+      run: |-
+        go build \
+          -o out/pkl-reader-helm/pkl-reader-helm-$GOOS-$GOARCH.bin \
+          -ldflags="-X 'main.Version=$(cat pkl/VERSION.txt)'" \
+          cmd/pkl-reader-helm/pkl-reader-helm.go
+    - env:
+        GOOS: macos
+        GOARCH: aarch64
+      working-directory: helm
+      run: |-
+        go build \
+          -o out/pkl-reader-helm/pkl-reader-helm-$GOOS-$GOARCH.bin \
+          -ldflags="-X 'main.Version=$(cat pkl/VERSION.txt)'" \
+          cmd/pkl-reader-helm/pkl-reader-helm.go
+    - env:
+        GOOS: linux
+        GOARCH: amd64
+      working-directory: helm
+      run: |-
+        go build \
+          -o out/pkl-reader-helm/pkl-reader-helm-$GOOS-$GOARCH.bin \
+          -ldflags="-X 'main.Version=$(cat pkl/VERSION.txt)'" \
+          cmd/pkl-reader-helm/pkl-reader-helm.go
+    - env:
+        GOOS: linux
+        GOARCH: aarch64
+      working-directory: helm
+      run: |-
+        go build \
+          -o out/pkl-reader-helm/pkl-reader-helm-$GOOS-$GOARCH.bin \
+          -ldflags="-X 'main.Version=$(cat pkl/VERSION.txt)'" \
+          cmd/pkl-reader-helm/pkl-reader-helm.go
+    - uses: actions/upload-artifact@v5
+      with:
+        name: build-intermediate-helm
+        path: helm/out*/pkl-reader-helm/*.bin
+    - name: Upload Test Result XML
+      if: '!cancelled()'
+      uses: actions/upload-artifact@v5
+      with:
+        name: test-results-xml-build-helm
+        path: '*/test-results/**/*.xml'
+  build-helm-macos-universal-binary:
+    if: github.repository_owner == 'apple'
+    needs:
+    - build-helm
+    runs-on:
+    - macos
+    - self-hosted
+    steps:
+    - uses: actions/download-artifact@v6
+      with:
+        name: build-intermediate-helm
+        path: helm
+        merge-multiple: true
+    - working-directory: helm
+      run: |-
+        lipo -create \
+          -output out/pkl-reader-helm/pkl-reader-helm-macos.bin \
+          out/pkl-reader-helm/pkl-reader-helm-macos-*.bin
+        rm out/pkl-reader-helm/pkl-reader-helm-macos-*.bin
+    - uses: actions/upload-artifact@v5
+      with:
+        name: build-artifact-helm
+        path: helm/out*/pkl-reader-helm/*.bin
+    - name: Upload Test Result XML
+      if: '!cancelled()'
+      uses: actions/upload-artifact@v5
+      with:
+        name: test-results-xml-build-helm-macos-universal-binary
+        path: '*/test-results/**/*.xml'
+  publish-helm:
+    name: Publish - helm
+    if: startsWith(github.ref_name, 'Publish - helm@')
+    needs:
+    - build-helm
+    - build-helm-macos-universal-binary
+    - check-format-pkl
+    - check-format-go
+    - check-license-headers
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+    - name: Check that tag matches helm/pkl/VERSION.txt
+      env:
+        GIT_TAG: ${{ github.ref_name }}
+      working-directory: helm
+      run: |-
+        VERSION="${GIT_TAG##*@}"
+        EXPECTED_VERSION="$(cat pkl/VERSION.txt)"
+
+        if [ "${EXPECTED_VERSION}" != "${VERSION}" ]; then
+          echo "Mismatching versions!"
+          echo "helm/pkl/VERSION.txt has ${EXPECTED_VERSION}"
+          echo "Inferred version from Git tag is ${VERSION}"
+          echo "Update helm/pkl/VERSION.txt to match the tag, and re-tag."
+          exit 1
+        fi
+    - name: Setup Pkl
+      id: setup-pkl
+      env:
+        PKL_VERSION: 0.30.0
+        PKL_FILENAME: pkl
+        PKL_DOWNLOAD_URL: https://github.com/apple/pkl/releases/download/0.30.0/pkl-linux-amd64
+      shell: bash
+      run: |-
+        DIR="$(mktemp -d /tmp/pkl-$PKL_VERSION-XXXXXX)"
+        PKL_EXEC="$DIR/$PKL_FILENAME"
+        curl -sfL -o $PKL_EXEC "$PKL_DOWNLOAD_URL"
+        chmod +x $PKL_EXEC
+        echo "$DIR" >> "$GITHUB_PATH"
+        echo "pkl_exec=$PKL_EXEC" >> "$GITHUB_OUTPUT"
+    - name: Build Pkl package
+      working-directory: helm
+      run: pkl project package pkl --output-path out/pkl-package --external-resource-reader reader+helm='go run ./cmd/pkl-reader-helm/... --package-version-check=false'
+    - uses: actions/download-artifact@v6
+      with:
+        name: build-artifact-helm-*
+        path: helm
+        merge-multiple: true
+    - name: Publish release
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_REPO: ${{ github.repository }}
+      working-directory: helm
+      run: |-
+        gh release create ${{ github.ref_name }} \
+          --title "${{ github.ref_name }}" \
+          --target "${{ github.sha }}" \
+          --verify-tag \
+          --notes "Release of ${{ github.ref_name }}" \
+          out/pkl-package/**/*.* out/pkl-reader-helm/*.bin
+  publish-test-results:
+    if: '!failure() && !cancelled()'
+    needs:
+    - test-helm
+    - build-helm
+    - build-helm-macos-universal-binary
+    permissions:
+      checks: write
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/download-artifact@v6
+      with:
+        pattern: test-results-xml-*
+    - name: Publish test results
+      if: '!cancelled()'
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      with:
+        comment_mode: 'off'
+        files: test-results-xml-*/**/*.xml

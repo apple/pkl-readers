@@ -1,0 +1,157 @@
+//===----------------------------------------------------------------------===//
+// Copyright © 2025 Apple Inc. and the Pkl project authors. All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//   https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//===----------------------------------------------------------------------===//
+
+abstract module Reader
+
+import "@gha/actions/Artifact.pkl"
+import "@gha/actions/Common.pkl"
+import "@gha/Context.pkl"
+import "@gha/Workflow.pkl"
+import "@pkl.impl.ghactions/steps/SetupPkl.pkl"
+
+const pklVersion = "0.30.0"
+
+fixed runtime: String
+
+name: String
+
+fixed cmdName: String = "pkl-reader-\(name)"
+
+fixed buildArtifactPrefix = "build-artifact-\(name)"
+
+fixed buildIntermediatePrefix = "build-intermediate-\(name)"
+
+directory: String = name
+
+pklTestArgs: Listing<String>
+
+changedFilePatterns: Listing<String> = new {
+  "basePklProject.pkl"
+  ".github/**"
+  "shared/\(runtime)/**"
+  "\(directory)/**"
+}
+
+fixed setUpRuntimeStep: (*Workflow.Step | Workflow.TypedStep)?
+fixed readerTestStep: (*Workflow.Step | Workflow.TypedStep)
+fixed runtimeContainerImage: String?
+
+fixed testJob: Workflow.Job = new {
+  `runs-on` = "ubuntu-latest"
+  name = "Test - \(module.name)"
+  steps {
+    new Common.Checkout {}
+    new SetupPkl { version = pklVersion }.step
+    when (setUpRuntimeStep != null) {
+      setUpRuntimeStep
+    }
+    new {
+      run = "mkdir -p \(directory)/test-results"
+    }
+    readerTestStep
+    new {
+      name = "Run Pkl tests"
+      `working-directory` = directory
+      run =
+        """
+        pkl test --project-dir pkl --junit-reports test-results \(pklTestArgs.join(" "))
+        """
+    }
+  }
+}
+
+fixed buildJobs: Mapping<
+  String(startsWith("build-\(name)-")),
+  Workflow.Job((runtimeContainerImage != null).implies(name.endsWith(":\(runtimeContainerImage)"))),
+> = new {
+  default {
+    needs { "test-\(name)" }
+    `if` = "startsWith(github.ref_name, '\(name)@')"
+    steps {
+      new Common.Checkout {}
+      when (setUpRuntimeStep != null) {
+        setUpRuntimeStep
+      }
+    }
+  }
+}
+
+fixed publishJob: Workflow.Job = new {
+  `runs-on` = "ubuntu-latest"
+  needs = buildJobs.keys.toListing()
+  `if` = "startsWith(github.ref_name, '\(name)@')"
+  name = "Publish - \(module.name)"
+  permissions {
+    contents = "write"
+  }
+  steps {
+    new Common.Checkout {}
+    new {
+      name = "Check that tag matches \(module.directory)/pkl/VERSION.txt"
+      `working-directory` = directory
+      env {
+        ["GIT_TAG"] = Context.github.refName
+      }
+      run =
+        """
+        VERSION="${GIT_TAG##*@}"
+        EXPECTED_VERSION="$(cat pkl/VERSION.txt)"
+
+        if [ "${EXPECTED_VERSION}" != "${VERSION}" ]; then
+          echo "Mismatching versions!"
+          echo "\(module.directory)/pkl/VERSION.txt has ${EXPECTED_VERSION}"
+          echo "Inferred version from Git tag is ${VERSION}"
+          echo "Update \(module.directory)/pkl/VERSION.txt to match the tag, and re-tag."
+          exit 1
+        fi
+        """
+    }
+    new SetupPkl { version = pklVersion }.step
+    new {
+      name = "Build Pkl package"
+      `working-directory` = directory
+      run =
+        """
+        pkl project package pkl --output-path out/pkl-package \(pklTestArgs.join(" "))
+        """
+    }
+    new Artifact.Download {
+      with {
+        name = "\(buildArtifactPrefix)-*"
+        path = module.directory
+        `merge-multiple` = true
+      }
+    }
+    new {
+      name = "Publish release"
+      `working-directory` = directory
+      env {
+        ["GH_TOKEN"] = Context.github.token
+        ["GH_REPO"] = Context.github.repository
+      }
+      // language=bash
+      run =
+        #"""
+        gh release create \#(Context.github.refName) \
+          --title "\#(Context.github.refName)" \
+          --target "\#(Context.github.sha)" \
+          --verify-tag \
+          --notes "Release of \#(Context.github.refName)" \
+          out/pkl-package/**/*.* out/\#(cmdName)/*.bin
+        """#
+    }
+  }
+}

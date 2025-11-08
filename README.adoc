@@ -1,0 +1,14 @@
+= pkl-readers
+
+This is a monorepo of link:https://pkl-lang.org/main/current/language-reference/index.html#external-readers[external reader] implementations maintained and published by the Pkl team.
+
+All readers in this repo have a minimum Pkl version of 0.30.0.
+
+== Using packages
+
+Packages within this repository are published as `package://pkg.pkl-lang.org/pkl-readers/<NAME>@<VERSION>`.
+Each package requires the corresponding external reader binary to be installed. Binaries are published to link:https://github.com/apple/pkl-readers/releases[this repo's releases].
+
+== Readers
+
+* link:helm[Helm] - "Import" link:https://helm.sh[Helm] charts directly as link:https://pkl-lang.org/package-docs/pkg.pkl-lang.org/pkl-k8s/k8s/current/K8sResource/index.html[`K8sResource`] instances.
