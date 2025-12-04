@@ -44,7 +44,11 @@ func (s Spec) CheckPackageVersion(uri url.URL) error {
 		return nil
 	}
 
-	packageVersion := uri.Query().Get("packageVersion")
+	fragmentQuery, err := url.ParseQuery(uri.Fragment)
+	if err != nil {
+		return fmt.Errorf("could not parse uri fragment as a query: '%s'", uri.Fragment)
+	}
+	packageVersion := fragmentQuery.Get("packageVersion")
 	switch packageVersion {
 	case "":
 		return errors.New("read uri did not include expected packageVersion query parameter")

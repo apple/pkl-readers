@@ -2,7 +2,7 @@
 
 This is a monorepo of link:https://pkl-lang.org/main/current/language-reference/index.html#external-readers[external reader] implementations maintained and published by the Pkl team.
 
-All readers in this repo have a minimum Pkl version of 0.30.0.
+All readers in this repo have a minimum Pkl version of 0.30.1.
 
 == Using packages
 

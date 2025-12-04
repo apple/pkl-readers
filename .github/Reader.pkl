@@ -22,7 +22,7 @@ import "@gha/Context.pkl"
 import "@gha/Workflow.pkl"
 import "@pkl.impl.ghactions/steps/SetupPkl.pkl"
 
-const pklVersion = "0.30.0"
+const pklVersion = "0.30.1"
 
 fixed runtime: String
 

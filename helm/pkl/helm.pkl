@@ -41,9 +41,8 @@ abstract class Request {
       .replaceAll("/", "_")
   hidden fixed requestUri: URI = new {
     scheme = "reader+helm"
-    host = encodedRequest
-    path = "/"
-    query = "packageVersion=\(packageVersion)"
+    path = encodedRequest
+    fragment = "packageVersion=\(packageVersion)"
   }
 }
 

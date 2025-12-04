@@ -66,7 +66,7 @@ func (r helmReader) Read(uri url.URL) ([]byte, error) {
 	}
 
 	var req msg.Request
-	reqBuf, err := base64.RawURLEncoding.DecodeString(uri.Host)
+	reqBuf, err := base64.RawURLEncoding.DecodeString(uri.Opaque)
 	if err != nil {
 		return nil, fmt.Errorf("unable to decode request: %w", err)
 	}
