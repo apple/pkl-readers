@@ -25,8 +25,9 @@ import (
 var (
 	Version   = "development"
 	_, _, run = shared.New(shared.Spec{
-		Name:  "pkl-reader-helm",
-		Short: "Pkl External Reader for Helm charts",
+		SchemeSuffix: "helm",
+		Name:         "pkl-reader-helm",
+		Short:        "Pkl External Reader for Helm charts",
 		Long: `Pkl External Reader for Helm charts.
 
 External Readers: https://pkl-lang.org/main/current/language-reference/index.html#external-readers

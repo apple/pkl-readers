@@ -30,12 +30,14 @@ import (
 var enableDebugLogging bool
 
 type Spec struct {
+	SchemeSuffix              string
 	Name                      string
 	Short                     string
 	Long                      string
 	Version                   string
 	VersionedPackages         []string
 	enablePackageVersionCheck bool
+	scheme                    string
 }
 
 type version struct {
@@ -54,6 +56,7 @@ func New[T any](spec Spec, run func(ctx context.Context, spec Spec, opts *T) err
 			if enableDebugLogging {
 				slog.SetLogLoggerLevel(slog.LevelDebug)
 			}
+			spec.scheme = "reader+" + spec.SchemeSuffix
 			if err := run(cmd.Context(), spec, &opts); err != nil {
 				slog.ErrorContext(cmd.Context(), "execution failed", "error", err)
 			}

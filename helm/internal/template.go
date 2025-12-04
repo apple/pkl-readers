@@ -20,7 +20,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log/slog"
 	"os"
@@ -38,16 +37,6 @@ import (
 )
 
 func (r helmReader) template(req msg.Template) ([]byte, error) {
-	if req.GetReleaseName() == "" {
-		return nil, errors.New("releaseName parameter is required")
-	}
-	if req.GetChart() == "" {
-		return nil, errors.New("chart parameter is required")
-	}
-	if req.GetNamespace() == "" {
-		return nil, errors.New("namespace parameter is required")
-	}
-
 	var vals map[string]any
 	if req.GetValuesJson() != "" {
 		if err := json.Unmarshal([]byte(req.GetValuesJson()), &vals); err != nil {

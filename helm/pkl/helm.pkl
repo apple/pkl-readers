@@ -41,8 +41,8 @@ abstract class Request {
       .replaceAll("/", "_")
   hidden fixed requestUri: URI = new {
     scheme = "reader+helm"
-    path = encodedRequest
-    fragment = "packageVersion=\(packageVersion)"
+    path = "/"
+    query = "request=\(encodedRequest)&packageVersion=\(packageVersion)"
   }
 }
 
@@ -54,7 +54,7 @@ class Template extends Request {
   ///
   /// May be in the format `<repo>/<chart>`, an OCI URI,
   /// or an absolute path to a local chart directory or package.
-  chart: String
+  chart: String(!isEmpty)
 
   /// If non-null, request a specific version of the chart.
   ///
@@ -62,10 +62,10 @@ class Template extends Request {
   version: String?
 
   /// Becomes the name of the Helm release.
-  releaseName: String
+  releaseName: String(!isEmpty)
 
   /// Equivalent to the `--namespace` flag of `helm template`.
-  namespace: String
+  namespace: String(!isEmpty)
 
   /// The values to use during Helm chart templating.
   ///
@@ -73,7 +73,17 @@ class Template extends Request {
   /// and passing it via the `--values` flag to `helm template`.
   hidden values: Any
 
-  fixed valuesJson: String = if (values == null) "" else new JsonRenderer {}.renderValue(values)
+  /// The renderer used to render [values].
+  ///
+  /// If [values] is a module and has a `output.renderer` that is a [JsonRenderer], the configured
+  /// renderer is used. Otherwise, the default value is a new [JsonRenderer].
+  hidden renderer: JsonRenderer =
+    if (values is Module && values.output.renderer is JsonRenderer)
+      values.output.renderer as JsonRenderer
+    else
+      new {}
+
+  fixed valuesJson: String = if (values == null) "" else renderer.renderValue(values)
 
   /// Resource templates to be used for converting custom resources.
   ///

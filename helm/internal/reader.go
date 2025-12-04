@@ -18,7 +18,6 @@ package internal
 
 import (
 	"context"
-	"encoding/base64"
 	"fmt"
 	"log/slog"
 	"net/url"
@@ -61,17 +60,9 @@ type helmReader struct {
 }
 
 func (r helmReader) Read(uri url.URL) ([]byte, error) {
-	if err := r.CheckPackageVersion(uri); err != nil {
-		return nil, err
-	}
-
 	var req msg.Request
-	reqBuf, err := base64.RawURLEncoding.DecodeString(uri.Opaque)
-	if err != nil {
-		return nil, fmt.Errorf("unable to decode request: %w", err)
-	}
-	if err := pkl.Unmarshal(reqBuf, &req); err != nil {
-		return nil, fmt.Errorf("unable to unmarshal request: %w", err)
+	if err := r.DecodeRequest(uri, &req); err != nil {
+		return nil, err
 	}
 
 	slog.Debug("received request", "kind", req.GetKind())
@@ -83,8 +74,3 @@ func (r helmReader) Read(uri url.URL) ([]byte, error) {
 		return nil, fmt.Errorf("unrecognized action '%s'", uri.Host)
 	}
 }
-
-func (r helmReader) Scheme() string                                    { return "reader+helm" }
-func (r helmReader) IsGlobbable() bool                                 { return false }
-func (r helmReader) HasHierarchicalUris() bool                         { return false }
-func (r helmReader) ListElements(_ url.URL) ([]pkl.PathElement, error) { return nil, nil }

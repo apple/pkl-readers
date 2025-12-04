@@ -29,7 +29,7 @@ Be sure to include the following information:
 When preparing a pull request, follow this checklist:
 
 * Imitate the conventions of surrounding code.
-* Format `.pkl` files in your PR with `pkl format apply`.
+* Format `.pkl` files in your PR with `pkl format -w`.
 * Follow the {uri-seven-rules}[seven rules] of great Git commit messages:
 ** Separate subject from body with a blank line.
 ** Limit the subject line to 50 characters.

@@ -18,6 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
+      with:
+        persist-credentials: false
     - name: Setup Pkl
       id: setup-pkl
       env:
@@ -32,12 +34,14 @@ jobs:
         chmod +x $PKL_EXEC
         echo "$DIR" >> "$GITHUB_PATH"
         echo "pkl_exec=$PKL_EXEC" >> "$GITHUB_OUTPUT"
-    - name: Check Go Formatting
+    - name: Check Pkl Formatting
       run: pkl format --diff-name-only .
   check-format-go:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
+      with:
+        persist-credentials: false
     - uses: actions/setup-go@v6
       with:
         go-version: '1.25'
@@ -58,6 +62,7 @@ jobs:
     steps:
     - uses: actions/checkout@v5
       with:
+        persist-credentials: false
         fetch-depth: 0
     - run: hawkeye check --config licenserc.toml --fail-if-unknown
     container:
@@ -69,6 +74,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
+      with:
+        persist-credentials: false
     - name: Setup Pkl
       id: setup-pkl
       env:
@@ -92,6 +99,9 @@ jobs:
     - name: Run Go tests
       working-directory: helm
       run: |-
+        go generate
+        git diff --exit-code
+
         go install github.com/jstemmer/go-junit-report/v2@v2.1.0
         echo "Running Go unit tests"
         go test -race -v ./... 2>&1 | go-junit-report -iocopy -set-exit-code -out test-results/go-test-results.xml

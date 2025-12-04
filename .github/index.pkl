@@ -59,7 +59,7 @@ build {
         new Common.Checkout {}
         new SetupPkl { version = Reader.pklVersion }.step
         new {
-          name = "Check Go Formatting"
+          name = "Check Pkl Formatting"
           run = "pkl format --diff-name-only ."
         }
       }
@@ -109,6 +109,7 @@ prb = (build) {
         new Common.Checkout {
           with {
             `fetch-depth` = 0
+            `persist-credentials` = true // needed to fetch the base branch for comparison
           }
         }
         new {
