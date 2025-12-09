@@ -160,25 +160,3 @@ release = (build) {
     }
   }
 }
-
-// TODO: remove this workaround once the repo is public
-output {
-  files {
-    [[true]] {
-      renderer {
-        converters {
-          [Job.getClass()] = (it: Job) ->
-            if (it.steps.any((step) -> step is PublishUnitTestResult))
-              (it) {
-                permissions {
-                  contents = "read"
-                  issues = "read"
-                }
-              }
-            else
-              it
-        }
-      }
-    }
-  }
-}
