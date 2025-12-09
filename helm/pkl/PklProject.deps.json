@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "resolvedDependencies": {
+    "package://pkg.pkl-lang.org/pkl-pantry/pkl.experimental.deepToTyped@1": {
+      "type": "remote",
+      "uri": "projectpackage://pkg.pkl-lang.org/pkl-pantry/pkl.experimental.deepToTyped@1.1.0",
+      "checksums": {
+        "sha256": "4631c883e7bc0f240edf7fd5f826b89a90ebbd3046f9e8e2df4743a642bd75aa"
+      }
+    },
+    "package://pkg.pkl-lang.org/pkl-pantry/k8s.contrib@1": {
+      "type": "remote",
+      "uri": "projectpackage://pkg.pkl-lang.org/pkl-pantry/k8s.contrib@1.0.3",
+      "checksums": {
+        "sha256": "fb3ba6d751f2ec41bc78e07d4a1e6d17625a1c7234204dacd257760ab7a20aaf"
+      }
+    },
+    "package://pkg.pkl-lang.org/pkl-pantry/pkl.experimental.uri@1": {
+      "type": "remote",
+      "uri": "projectpackage://pkg.pkl-lang.org/pkl-pantry/pkl.experimental.uri@1.0.3",
+      "checksums": {
+        "sha256": "0b1db5755fa0c7651d5c62e0d5ef8a9ed4ed6411fe31769d06714600162e1589"
+      }
+    },
+    "package://pkg.pkl-lang.org/pkl-k8s/k8s@1": {
+      "type": "remote",
+      "uri": "projectpackage://pkg.pkl-lang.org/pkl-k8s/k8s@1.2.1",
+      "checksums": {
+        "sha256": "be1eed3358d74de49bde6b67670639b795243e6a21c32ae98f03f404d019d16b"
+      }
+    },
+    "package://pkg.pkl-lang.org/pkl-go/pkl.golang@0": {
+      "type": "remote",
+      "uri": "projectpackage://pkg.pkl-lang.org/pkl-go/pkl.golang@0.12.1",
+      "checksums": {
+        "sha256": "cc13b86a13cc80a1f5cca1796cb951e166f0613062441149ee5178cc58789400"
+      }
+    }
+  }
+}

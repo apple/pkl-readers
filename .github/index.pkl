@@ -1,0 +1,184 @@
+//===----------------------------------------------------------------------===//
+// Copyright © 2025 Apple Inc. and the Pkl project authors. All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//   https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//===----------------------------------------------------------------------===//
+
+amends "@pkl.impl.ghactions/PklCI.pkl"
+import "@com.github.actions/catalog.pkl"
+import "@com.github.actions/context.pkl"
+import "@com.github.actions/Job.pkl"
+import "@pkl.impl.ghactions/actions/PublishUnitTestResult.pkl"
+import "@pkl.impl.ghactions/jobs/HawkeyeCheck.pkl"
+import "@pkl.impl.ghactions/steps/SetupPkl.pkl"
+
+import "GoReader.pkl"
+import "Reader.pkl"
+
+local readers: Listing<Reader>(isDistinctBy((it) -> it.name)) = new {
+  new GoReader {
+    name = "helm"
+    pklTestArgs {
+      "--external-resource-reader"
+      "reader+helm='go run ./cmd/pkl-reader-helm/... --package-version-check=false'"
+    }
+  }
+}
+
+testReports {
+  junit {
+    "*/test-results/**/*.xml"
+  }
+  excludeJobs {
+    Regex("check-.*")
+    Regex("build-.*")
+    Regex("publish-.*")
+    Regex("discover-.*")
+  }
+}
+
+// on main / other branches: run all tests/checks
+// on prbs: run all checks and only test readers with changed files
+// on release: run all checks and test, builds, publish for tagged reader pkl.<name>@<version>
+
+main = build
+
+build {
+  jobs {
+    ["check-format-pkl"] {
+      `runs-on` = "ubuntu-latest"
+      steps {
+        catalog.`actions/checkout@v6`
+        new SetupPkl { version = Reader.pklVersion }.step
+        new {
+          name = "Check Pkl Formatting"
+          run = "pkl format --diff-name-only ."
+        }
+      }
+    }
+    ["check-format-go"] {
+      `runs-on` = "ubuntu-latest"
+      steps {
+        catalog.`actions/checkout@v6`
+        GoReader.setUpRuntimeStep
+        new {
+          name = "Check Go Formatting"
+          run =
+            """
+            go install mvdan.cc/gofumpt@v\(GoReader.gofumptVersion)
+            gofumpt -d .
+            """
+          // gofumpt -d shows the diff but is also required to get a non-zero exit when formatting is needed
+        }
+        new {
+          name = "Check NOTICE.txt"
+          run =
+            """
+            go install github.com/google/go-licenses/v2@v\(GoReader.goLicensesVersion)
+            ./scripts/create_notice.sh
+            git diff --exit-code
+            """
+        }
+      }
+    }
+    ["check-license-headers"] = new HawkeyeCheck {}.job
+    for (reader in readers) {
+      ["test-\(reader.name)"] = reader.testJob
+    }
+  }
+}
+
+prb = (build) {
+  jobs {
+    ["discover-changed-files"] {
+      `runs-on` = "ubuntu-latest"
+      outputs {
+        for (reader in readers) {
+          ["changed_\(reader.name)"] = context.steps.outputs("changed-files", reader.name)
+        }
+      }
+      steps {
+        (catalog.`actions/checkout@v6`) {
+          with {
+            `fetch-depth` = 0
+            `persist-credentials` = true // needed to fetch the base branch for comparison
+          }
+        }
+        new {
+          name = "Discover changed files"
+          id = "changed-files"
+          run =
+            new Listing {
+              "git fetch origin \(context.github.baseRef)"
+              "set +e"
+              for (reader in readers) {
+                """
+                echo "Discovering changes for \(reader.name) reader"
+                git diff --name-only --exit-code origin/\(context.github.baseRef) -- \(reader.changedFilePatterns.join(" "))
+                echo "\(reader.name)=$?" >> "$GITHUB_OUTPUT"
+                echo
+                """
+              }
+            }.join("\n")
+        }
+      }
+    }
+    for (reader in readers) {
+      ["test-\(reader.name)"] {
+        `if` = "needs.discover-changed-files.outputs.changed_\(reader.name) != '0'"
+        needs { "discover-changed-files" }
+      }
+    }
+  }
+}
+
+release = (build) {
+  jobs {
+    for (reader in readers) {
+      ["test-\(reader.name)"] {
+        `if` = "startsWith(github.ref_name, '\(reader.name)@')"
+      }
+      ...(reader.buildJobs) {
+        [[true]] {
+          `if` = "startsWith(github.ref_name, '\(reader.name)@')"
+        }
+      }
+      ["publish-\(reader.name)"] = (reader.publishJob) {
+        `if` = "startsWith(github.ref_name, '\(reader.name)@')"
+        needs { ...build.jobs.keys.filter((it) -> it.startsWith("check-")) }
+      }
+    }
+  }
+}
+
+// TODO: remove this workaround once the repo is public
+output {
+  files {
+    [[true]] {
+      renderer {
+        converters {
+          [Job.getClass()] = (it: Job) ->
+            if (it.steps.any((step) -> step is PublishUnitTestResult))
+              (it) {
+                permissions {
+                  contents = "read"
+                  issues = "read"
+                }
+              }
+            else
+              it
+        }
+      }
+    }
+  }
+}

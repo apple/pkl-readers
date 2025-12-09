@@ -1,0 +1,121 @@
+//===----------------------------------------------------------------------===//
+// Copyright © 2025 Apple Inc. and the Pkl project authors. All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//   https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//===----------------------------------------------------------------------===//
+
+@ModuleInfo { minPklVersion = "0.30.0" }
+@go.Package { name = "github.com/apple/pkl-readers/helm/internal/msg" }
+module pkl.helm.helm
+
+import "pkl:pklbinary"
+import "pkl:yaml"
+
+import "@deepToTyped/deepToTyped.pkl"
+import "@go/go.pkl"
+import "@k8s.contrib/convert.pkl"
+import "@k8s/K8sResource.pkl"
+import "@uri/URI.pkl"
+
+local const packageVersion = read("VERSION.txt").text.trim()
+
+abstract class Request {
+  fixed kind: String
+
+  local encodedRequest =
+    new pklbinary.Renderer {}
+      .renderValue(this)
+      .base64
+      .dropLastWhile((char) -> char == "=") // use base64 raw encoding
+      .replaceAll("+", "-") // use base64 url encoding
+      .replaceAll("/", "_")
+  hidden fixed requestUri: URI = new {
+    scheme = "reader+helm"
+    path = "/"
+    query = "request=\(encodedRequest)&packageVersion=\(packageVersion)"
+  }
+}
+
+/// Evaluate a Helm chart and "import" its output.
+class Template extends Request {
+  fixed kind = "template"
+
+  /// Identify the chart to template.
+  ///
+  /// May be in the format `<repo>/<chart>`, an OCI URI,
+  /// or an absolute path to a local chart directory or package.
+  chart: String(!isEmpty)
+
+  /// If non-null, request a specific version of the chart.
+  ///
+  /// This is only relevant when [chart] is not a local path.
+  version: String?
+
+  /// Becomes the name of the Helm release.
+  releaseName: String(!isEmpty)
+
+  /// Equivalent to the `--namespace` flag of `helm template`.
+  namespace: String(!isEmpty)
+
+  /// The values to use during Helm chart templating.
+  ///
+  /// This parameter is equivalent to rendering the value as JSON
+  /// and passing it via the `--values` flag to `helm template`.
+  hidden values: Any
+
+  /// The renderer used to render [values].
+  ///
+  /// If [values] is a module and has a `output.renderer` that is a [JsonRenderer], the configured
+  /// renderer is used. Otherwise, the default value is a new [JsonRenderer].
+  hidden renderer: JsonRenderer =
+    if (values is Module && values.output.renderer is JsonRenderer)
+      values.output.renderer as JsonRenderer
+    else
+      new {}
+
+  fixed valuesJson: String = if (values == null) "" else renderer.renderValue(values)
+
+  /// Resource templates to be used for converting custom resources.
+  ///
+  /// The first [String] key is the resource's `kind`, the second its `apiVersion`.
+  ///
+  /// Example:
+  /// ```
+  /// customResourceTemplates {
+  ///   ["Custom"] {
+  ///      ["v1"] = import("Custom.pkl")
+  ///   }
+  /// }
+  /// ```
+  hidden customResourceTemplates: Mapping<String, Mapping<String, K8sResource>>
+
+  local converter = (convert) { customResourceTemplates = outer.customResourceTemplates }
+
+  local manifests =
+    new yaml.Parser { useMapping = true }.parseAll(read(requestUri.toString())) as List<Mapping?>
+
+  /// Perform Helm templating.
+  ///
+  /// Returns a [Mapping] with keys in the format
+  /// "<apiVersion>/<kind>:<metadata.namespace>/<metadata.name>".
+  /// The value are instances of [K8sResource].
+  hidden fixed resources: Mapping<String, K8sResource> = new {
+    for (manifest in manifests) {
+      when (manifest != null) {
+        ["\(manifest["apiVersion"])/\(manifest["kind"]):\(manifest["metadata"].getOrNull("namespace") ?? "")/\(manifest["metadata"]["name"])"] =
+          deepToTyped.apply(converter.getResourceTemplate(manifest).getClass(), manifest)
+            as K8sResource
+      }
+    }
+  }
+}

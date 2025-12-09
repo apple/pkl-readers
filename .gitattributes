@@ -1,0 +1,2 @@
+PklProject linguist-language=Pkl
+.github/workflows/*.yml linguist-generated=true
