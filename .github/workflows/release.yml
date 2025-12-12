@@ -15,7 +15,7 @@ jobs:
   check-format-pkl:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
       with:
         persist-credentials: false
     - name: Setup Pkl
@@ -37,10 +37,10 @@ jobs:
   check-format-go:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
       with:
         persist-credentials: false
-    - uses: actions/setup-go@v6
+    - uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6
       with:
         go-version: '1.25'
         check-latest: true
@@ -58,7 +58,7 @@ jobs:
     name: hawkeye-check
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
       with:
         persist-credentials: false
         fetch-depth: 0
@@ -74,7 +74,7 @@ jobs:
       issues: read
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
       with:
         persist-credentials: false
     - name: Setup Pkl
@@ -91,7 +91,7 @@ jobs:
         chmod +x $PKL_EXEC
         echo "$DIR" >> "$GITHUB_PATH"
         echo "pkl_exec=$PKL_EXEC" >> "$GITHUB_OUTPUT"
-    - uses: actions/setup-go@v6
+    - uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6
       with:
         go-version: '1.25'
         check-latest: true
@@ -111,7 +111,7 @@ jobs:
       run: pkl test --project-dir pkl --junit-reports test-results --external-resource-reader reader+helm='go run ./cmd/pkl-reader-helm/... --package-version-check=false'
     - name: Publish test results
       if: '!cancelled()'
-      uses: EnricoMi/publish-unit-test-result-action@v2
+      uses: EnricoMi/publish-unit-test-result-action@34d7c956a59aed1bfebf31df77b8de55db9bbaaf # v2
       with:
         comment_mode: 'off'
         files: '*/test-results/**/*.xml'
@@ -120,10 +120,10 @@ jobs:
     if: startsWith(github.ref_name, 'helm@')
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
       with:
         persist-credentials: false
-    - uses: actions/setup-go@v6
+    - uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6
       with:
         go-version: '1.25'
         check-latest: true
@@ -164,7 +164,7 @@ jobs:
           -o out/pkl-reader-helm/pkl-reader-helm-linux-amd64.bin \
           -ldflags="-X 'main.Version=$(cat pkl/VERSION.txt)'" \
           cmd/pkl-reader-helm/pkl-reader-helm.go
-    - uses: actions/upload-artifact@v5
+    - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
       with:
         name: build-intermediate-helm
         path: helm/out*/pkl-reader-helm/*.bin
@@ -177,7 +177,7 @@ jobs:
     - macos
     - self-hosted
     steps:
-    - uses: actions/download-artifact@v6
+    - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6
       with:
         name: build-intermediate-helm
         path: helm
@@ -188,7 +188,7 @@ jobs:
           -output out/pkl-reader-helm/pkl-reader-helm-macos.bin \
           out/pkl-reader-helm/pkl-reader-helm-macos-*.bin
         rm out/pkl-reader-helm/pkl-reader-helm-macos-*.bin
-    - uses: actions/upload-artifact@v5
+    - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
       with:
         name: build-artifact-helm-all
         path: helm/out*/pkl-reader-helm/*.bin
@@ -206,7 +206,7 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
       with:
         persist-credentials: false
     - name: Check that tag matches helm/pkl/VERSION.txt
@@ -238,7 +238,7 @@ jobs:
         chmod +x $PKL_EXEC
         echo "$DIR" >> "$GITHUB_PATH"
         echo "pkl_exec=$PKL_EXEC" >> "$GITHUB_OUTPUT"
-    - uses: actions/setup-go@v6
+    - uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6
       with:
         go-version: '1.25'
         check-latest: true
@@ -246,7 +246,7 @@ jobs:
     - name: Build Pkl package
       working-directory: helm
       run: pkl project package pkl --output-path out/pkl-package --external-resource-reader reader+helm='go run ./cmd/pkl-reader-helm/... --package-version-check=false'
-    - uses: actions/download-artifact@v6
+    - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6
       with:
         path: helm
         pattern: build-artifact-helm-*
