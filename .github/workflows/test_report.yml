@@ -15,8 +15,6 @@ jobs:
     permissions:
       actions: read
       checks: write
-      contents: read
-      issues: read
     runs-on: ubuntu-latest
     steps:
     - name: Download artifacts
