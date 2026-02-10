@@ -1,0 +1,12 @@
+= pkl-reader-prometheus / pkl.prometheus Changelog
+
+[[release-0.1.0]]
+== Release 0.1.0 (2025-12-15)
+
+Initial release!
+
+=== Contributors ❤️
+
+Thank you to all of our contributors!
+
+* https://github.com/HT154[@HT154]

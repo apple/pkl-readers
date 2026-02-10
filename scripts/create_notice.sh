@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright © 2025 Apple Inc. and the Pkl project authors. All rights reserved.
+# Copyright © 2025-2026 Apple Inc. and the Pkl project authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,6 +22,9 @@ SOURCES="$SCRIPT_DIR/../shared/go/..."
 for cmd in $SCRIPT_DIR/../*/cmd/pkl-reader-*; do
   SOURCES="$SOURCES $cmd/..."
 done
+
+# NB: some dependencies (e.g. github.com/prometheus/procfs) are platform-dependent
+export GOOS=linux
 
 go-licenses report --template "$SCRIPT_DIR/notice.tpl" \
   --ignore github.com/apple/pkl-readers --ignore github.com/apple/pkl-go \

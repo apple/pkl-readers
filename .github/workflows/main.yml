@@ -67,8 +67,6 @@ jobs:
       image: ghcr.io/korandoru/hawkeye@sha256:c3ab994c0d81f3d116aabf9afc534e18648e3e90d7525d741c1e99dd8166ec85
   test-helm:
     name: 'test: helm'
-    permissions:
-      checks: write
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
@@ -106,9 +104,72 @@ jobs:
     - name: Run Pkl tests
       working-directory: helm
       run: pkl test --project-dir pkl --junit-reports test-results --external-resource-reader reader+helm='go run ./cmd/pkl-reader-helm/... --package-version-check=false'
+    - name: Upload Test Result XML
+      if: '!cancelled()'
+      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+      with:
+        name: test-results-xml-test-helm
+        path: '*/test-results/**/*.xml'
+  test-prometheus:
+    name: 'test: prometheus'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+      with:
+        persist-credentials: false
+    - name: Setup Pkl
+      id: setup-pkl
+      env:
+        PKL_VERSION: 0.30.1
+        PKL_FILENAME: pkl
+        PKL_DOWNLOAD_URL: https://github.com/apple/pkl/releases/download/0.30.1/pkl-linux-amd64
+      shell: bash
+      run: |-
+        DIR="$(mktemp -d /tmp/pkl-$PKL_VERSION-XXXXXX)"
+        PKL_EXEC="$DIR/$PKL_FILENAME"
+        curl -sfL -o $PKL_EXEC "$PKL_DOWNLOAD_URL"
+        chmod +x $PKL_EXEC
+        echo "$DIR" >> "$GITHUB_PATH"
+        echo "pkl_exec=$PKL_EXEC" >> "$GITHUB_OUTPUT"
+    - uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6
+      with:
+        go-version: '1.25'
+        check-latest: true
+        cache-dependency-path: go.work.sum
+    - run: mkdir -p prometheus/test-results
+    - name: Run Go tests
+      working-directory: prometheus
+      run: |-
+        go generate
+        git diff --exit-code
+
+        go install github.com/jstemmer/go-junit-report/v2@v2.1.0
+        echo "Running Go unit tests"
+        go test -race -v ./... 2>&1 | go-junit-report -iocopy -set-exit-code -out test-results/go-test-results.xml
+    - name: Run Pkl tests
+      working-directory: prometheus
+      run: pkl test --project-dir pkl --junit-reports test-results --external-resource-reader reader+prometheus='go run ./cmd/pkl-reader-prometheus/... --package-version-check=false'
+    - name: Upload Test Result XML
+      if: '!cancelled()'
+      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+      with:
+        name: test-results-xml-test-prometheus
+        path: '*/test-results/**/*.xml'
+  publish-test-results:
+    if: '!cancelled()'
+    needs:
+    - test-helm
+    - test-prometheus
+    permissions:
+      checks: write
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6
+      with:
+        pattern: test-results-xml-*
     - name: Publish test results
       if: '!cancelled()'
       uses: EnricoMi/publish-unit-test-result-action@34d7c956a59aed1bfebf31df77b8de55db9bbaaf # v2
       with:
         comment_mode: 'off'
-        files: '*/test-results/**/*.xml'
+        files: test-results-xml-*/**/*.xml

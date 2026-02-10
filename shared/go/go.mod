@@ -1,6 +1,6 @@
 module github.com/apple/pkl-readers/shared/go
 
-go 1.25.0
+go 1.25.7
 
 require (
 	github.com/apple/pkl-go v0.12.1

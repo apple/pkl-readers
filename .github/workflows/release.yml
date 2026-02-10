@@ -68,8 +68,6 @@ jobs:
   test-helm:
     name: 'test: helm'
     if: startsWith(github.ref_name, 'helm@')
-    permissions:
-      checks: write
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
@@ -107,12 +105,58 @@ jobs:
     - name: Run Pkl tests
       working-directory: helm
       run: pkl test --project-dir pkl --junit-reports test-results --external-resource-reader reader+helm='go run ./cmd/pkl-reader-helm/... --package-version-check=false'
-    - name: Publish test results
+    - name: Upload Test Result XML
       if: '!cancelled()'
-      uses: EnricoMi/publish-unit-test-result-action@34d7c956a59aed1bfebf31df77b8de55db9bbaaf # v2
+      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
       with:
-        comment_mode: 'off'
-        files: '*/test-results/**/*.xml'
+        name: test-results-xml-test-helm
+        path: '*/test-results/**/*.xml'
+  test-prometheus:
+    name: 'test: prometheus'
+    if: startsWith(github.ref_name, 'prometheus@')
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+      with:
+        persist-credentials: false
+    - name: Setup Pkl
+      id: setup-pkl
+      env:
+        PKL_VERSION: 0.30.1
+        PKL_FILENAME: pkl
+        PKL_DOWNLOAD_URL: https://github.com/apple/pkl/releases/download/0.30.1/pkl-linux-amd64
+      shell: bash
+      run: |-
+        DIR="$(mktemp -d /tmp/pkl-$PKL_VERSION-XXXXXX)"
+        PKL_EXEC="$DIR/$PKL_FILENAME"
+        curl -sfL -o $PKL_EXEC "$PKL_DOWNLOAD_URL"
+        chmod +x $PKL_EXEC
+        echo "$DIR" >> "$GITHUB_PATH"
+        echo "pkl_exec=$PKL_EXEC" >> "$GITHUB_OUTPUT"
+    - uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6
+      with:
+        go-version: '1.25'
+        check-latest: true
+        cache-dependency-path: go.work.sum
+    - run: mkdir -p prometheus/test-results
+    - name: Run Go tests
+      working-directory: prometheus
+      run: |-
+        go generate
+        git diff --exit-code
+
+        go install github.com/jstemmer/go-junit-report/v2@v2.1.0
+        echo "Running Go unit tests"
+        go test -race -v ./... 2>&1 | go-junit-report -iocopy -set-exit-code -out test-results/go-test-results.xml
+    - name: Run Pkl tests
+      working-directory: prometheus
+      run: pkl test --project-dir pkl --junit-reports test-results --external-resource-reader reader+prometheus='go run ./cmd/pkl-reader-prometheus/... --package-version-check=false'
+    - name: Upload Test Result XML
+      if: '!cancelled()'
+      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+      with:
+        name: test-results-xml-test-prometheus
+        path: '*/test-results/**/*.xml'
   build-helm:
     name: 'build: helm'
     if: startsWith(github.ref_name, 'helm@')
@@ -261,3 +305,169 @@ jobs:
           --verify-tag \
           --notes "Release of ${{ github.ref_name }}" \
           out/pkl-package/* out/pkl-reader-helm/*.bin
+  build-prometheus:
+    name: 'build: prometheus'
+    if: startsWith(github.ref_name, 'prometheus@')
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+      with:
+        persist-credentials: false
+    - uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6
+      with:
+        go-version: '1.25'
+        check-latest: true
+        cache-dependency-path: go.work.sum
+    - env:
+        GOOS: darwin
+        GOARCH: arm64
+      working-directory: prometheus
+      run: |-
+        go build \
+          -o out/pkl-reader-prometheus/pkl-reader-prometheus-macos-aarch64.bin \
+          -ldflags="-X 'main.Version=$(cat pkl/VERSION.txt)'" \
+          cmd/pkl-reader-prometheus/pkl-reader-prometheus.go
+    - env:
+        GOOS: darwin
+        GOARCH: amd64
+      working-directory: prometheus
+      run: |-
+        go build \
+          -o out/pkl-reader-prometheus/pkl-reader-prometheus-macos-amd64.bin \
+          -ldflags="-X 'main.Version=$(cat pkl/VERSION.txt)'" \
+          cmd/pkl-reader-prometheus/pkl-reader-prometheus.go
+    - env:
+        GOOS: linux
+        GOARCH: arm64
+      working-directory: prometheus
+      run: |-
+        go build \
+          -o out/pkl-reader-prometheus/pkl-reader-prometheus-linux-aarch64.bin \
+          -ldflags="-X 'main.Version=$(cat pkl/VERSION.txt)'" \
+          cmd/pkl-reader-prometheus/pkl-reader-prometheus.go
+    - env:
+        GOOS: linux
+        GOARCH: amd64
+      working-directory: prometheus
+      run: |-
+        go build \
+          -o out/pkl-reader-prometheus/pkl-reader-prometheus-linux-amd64.bin \
+          -ldflags="-X 'main.Version=$(cat pkl/VERSION.txt)'" \
+          cmd/pkl-reader-prometheus/pkl-reader-prometheus.go
+    - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+      with:
+        name: build-intermediate-prometheus
+        path: prometheus/out*/pkl-reader-prometheus/*.bin
+  build-prometheus-macos-universal-binary:
+    name: 'build: prometheus (universal binary)'
+    if: startsWith(github.ref_name, 'prometheus@')
+    needs:
+    - build-prometheus
+    runs-on:
+    - macos
+    - self-hosted
+    steps:
+    - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6
+      with:
+        name: build-intermediate-prometheus
+        path: prometheus
+        merge-multiple: true
+    - working-directory: prometheus
+      run: |-
+        lipo -create \
+          -output out/pkl-reader-prometheus/pkl-reader-prometheus-macos.bin \
+          out/pkl-reader-prometheus/pkl-reader-prometheus-macos-*.bin
+        rm out/pkl-reader-prometheus/pkl-reader-prometheus-macos-*.bin
+    - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+      with:
+        name: build-artifact-prometheus-all
+        path: prometheus/out*/pkl-reader-prometheus/*.bin
+  publish-prometheus:
+    name: 'publish: prometheus'
+    if: startsWith(github.ref_name, 'prometheus@')
+    needs:
+    - test-prometheus
+    - build-prometheus
+    - build-prometheus-macos-universal-binary
+    - check-format-pkl
+    - check-format-go
+    - check-license-headers
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+      with:
+        persist-credentials: false
+    - name: Check that tag matches prometheus/pkl/VERSION.txt
+      env:
+        GIT_TAG: ${{ github.ref_name }}
+      working-directory: prometheus
+      run: |-
+        VERSION="${GIT_TAG##*@}"
+        EXPECTED_VERSION="$(cat pkl/VERSION.txt)"
+
+        if [ "${EXPECTED_VERSION}" != "${VERSION}" ]; then
+          echo "Mismatching versions!"
+          echo "prometheus/pkl/VERSION.txt has ${EXPECTED_VERSION}"
+          echo "Inferred version from Git tag is ${VERSION}"
+          echo "Update prometheus/pkl/VERSION.txt to match the tag, and re-tag."
+          exit 1
+        fi
+    - name: Setup Pkl
+      id: setup-pkl
+      env:
+        PKL_VERSION: 0.30.1
+        PKL_FILENAME: pkl
+        PKL_DOWNLOAD_URL: https://github.com/apple/pkl/releases/download/0.30.1/pkl-linux-amd64
+      shell: bash
+      run: |-
+        DIR="$(mktemp -d /tmp/pkl-$PKL_VERSION-XXXXXX)"
+        PKL_EXEC="$DIR/$PKL_FILENAME"
+        curl -sfL -o $PKL_EXEC "$PKL_DOWNLOAD_URL"
+        chmod +x $PKL_EXEC
+        echo "$DIR" >> "$GITHUB_PATH"
+        echo "pkl_exec=$PKL_EXEC" >> "$GITHUB_OUTPUT"
+    - uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6
+      with:
+        go-version: '1.25'
+        check-latest: true
+        cache-dependency-path: go.work.sum
+    - name: Build Pkl package
+      working-directory: prometheus
+      run: pkl project package pkl --output-path out/pkl-package --external-resource-reader reader+prometheus='go run ./cmd/pkl-reader-prometheus/... --package-version-check=false'
+    - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6
+      with:
+        path: prometheus
+        pattern: build-artifact-prometheus-*
+        merge-multiple: true
+    - name: Publish release
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_REPO: ${{ github.repository }}
+      working-directory: prometheus
+      run: |-
+        gh release create ${{ github.ref_name }} \
+          --title "${{ github.ref_name }}" \
+          --target "${{ github.sha }}" \
+          --verify-tag \
+          --notes "Release of ${{ github.ref_name }}" \
+          out/pkl-package/* out/pkl-reader-prometheus/*.bin
+  publish-test-results:
+    if: '!cancelled()'
+    needs:
+    - test-helm
+    - test-prometheus
+    permissions:
+      checks: write
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6
+      with:
+        pattern: test-results-xml-*
+    - name: Publish test results
+      if: '!cancelled()'
+      uses: EnricoMi/publish-unit-test-result-action@34d7c956a59aed1bfebf31df77b8de55db9bbaaf # v2
+      with:
+        comment_mode: 'off'
+        files: test-results-xml-*/**/*.xml

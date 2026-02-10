@@ -1,5 +1,5 @@
 //===----------------------------------------------------------------------===//
-// Copyright © 2025 Apple Inc. and the Pkl project authors. All rights reserved.
+// Copyright © 2025-2026 Apple Inc. and the Pkl project authors. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@
 amends "@pkl.impl.ghactions/PklCI.pkl"
 import "@com.github.actions/catalog.pkl"
 import "@com.github.actions/context.pkl"
-import "@com.github.actions/Job.pkl"
-import "@pkl.impl.ghactions/actions/PublishUnitTestResult.pkl"
 import "@pkl.impl.ghactions/jobs/HawkeyeCheck.pkl"
 import "@pkl.impl.ghactions/steps/SetupPkl.pkl"
 
@@ -31,6 +29,13 @@ local readers: Listing<Reader>(isDistinctBy((it) -> it.name)) = new {
     pklTestArgs {
       "--external-resource-reader"
       "reader+helm='go run ./cmd/pkl-reader-helm/... --package-version-check=false'"
+    }
+  }
+  new GoReader {
+    name = "prometheus"
+    pklTestArgs {
+      "--external-resource-reader"
+      "reader+prometheus='go run ./cmd/pkl-reader-prometheus/... --package-version-check=false'"
     }
   }
 }

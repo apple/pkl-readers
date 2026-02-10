@@ -1,5 +1,5 @@
 //===----------------------------------------------------------------------===//
-// Copyright © 2025 Apple Inc. and the Pkl project authors. All rights reserved.
+// Copyright © 2025-2026 Apple Inc. and the Pkl project authors. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 //===----------------------------------------------------------------------===//
 
 @ModuleInfo { minPklVersion = "0.30.0" }
-@go.Package { name = "github.com/apple/pkl-readers/helm/internal/msg" }
+@go.Package { name = "github.com/apple/pkl-readers/\(readerName)/internal/msg" }
 module pkl.helm.helm
 
 import "pkl:pklbinary"
@@ -26,6 +26,8 @@ import "@go/go.pkl"
 import "@k8s.contrib/convert.pkl"
 import "@k8s/K8sResource.pkl"
 import "@uri/URI.pkl"
+
+hidden const readerName = "helm"
 
 local const packageVersion = read("VERSION.txt").text.trim()
 
@@ -40,7 +42,7 @@ abstract class Request {
       .replaceAll("+", "-") // use base64 url encoding
       .replaceAll("/", "_")
   hidden fixed requestUri: URI = new {
-    scheme = "reader+helm"
+    scheme = "reader+\(readerName)"
     path = "/"
     query = "request=\(encodedRequest)&packageVersion=\(packageVersion)"
   }

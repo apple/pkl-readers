@@ -110,10 +110,60 @@ jobs:
         name: test-results-xml-test-helm
         path: '*/test-results/**/*.xml'
         if-no-files-found: ignore
+  test-prometheus:
+    name: 'test: prometheus'
+    if: needs.discover-changed-files.outputs.changed_prometheus != '0'
+    needs:
+    - discover-changed-files
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+      with:
+        persist-credentials: false
+    - name: Setup Pkl
+      id: setup-pkl
+      env:
+        PKL_VERSION: 0.30.1
+        PKL_FILENAME: pkl
+        PKL_DOWNLOAD_URL: https://github.com/apple/pkl/releases/download/0.30.1/pkl-linux-amd64
+      shell: bash
+      run: |-
+        DIR="$(mktemp -d /tmp/pkl-$PKL_VERSION-XXXXXX)"
+        PKL_EXEC="$DIR/$PKL_FILENAME"
+        curl -sfL -o $PKL_EXEC "$PKL_DOWNLOAD_URL"
+        chmod +x $PKL_EXEC
+        echo "$DIR" >> "$GITHUB_PATH"
+        echo "pkl_exec=$PKL_EXEC" >> "$GITHUB_OUTPUT"
+    - uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6
+      with:
+        go-version: '1.25'
+        check-latest: true
+        cache-dependency-path: go.work.sum
+    - run: mkdir -p prometheus/test-results
+    - name: Run Go tests
+      working-directory: prometheus
+      run: |-
+        go generate
+        git diff --exit-code
+
+        go install github.com/jstemmer/go-junit-report/v2@v2.1.0
+        echo "Running Go unit tests"
+        go test -race -v ./... 2>&1 | go-junit-report -iocopy -set-exit-code -out test-results/go-test-results.xml
+    - name: Run Pkl tests
+      working-directory: prometheus
+      run: pkl test --project-dir pkl --junit-reports test-results --external-resource-reader reader+prometheus='go run ./cmd/pkl-reader-prometheus/... --package-version-check=false'
+    - name: Upload Test Result XML
+      if: '!cancelled()'
+      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+      with:
+        name: test-results-xml-test-prometheus
+        path: '*/test-results/**/*.xml'
+        if-no-files-found: ignore
   discover-changed-files:
     runs-on: ubuntu-latest
     outputs:
       changed_helm: ${{ steps.changed-files.outputs.helm }}
+      changed_prometheus: ${{ steps.changed-files.outputs.prometheus }}
     steps:
     - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
       with:
@@ -127,6 +177,10 @@ jobs:
         echo "Discovering changes for helm reader"
         git diff --name-only --exit-code origin/${{ github.base_ref }} -- basePklProject.pkl .github/** shared/go/** helm/**
         echo "helm=$?" >> "$GITHUB_OUTPUT"
+        echo
+        echo "Discovering changes for prometheus reader"
+        git diff --name-only --exit-code origin/${{ github.base_ref }} -- basePklProject.pkl .github/** shared/go/** prometheus/**
+        echo "prometheus=$?" >> "$GITHUB_OUTPUT"
         echo
   upload-event-file:
     runs-on: ubuntu-latest

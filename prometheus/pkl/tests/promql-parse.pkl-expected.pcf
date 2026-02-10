@@ -1,0 +1,13 @@
+examples {
+  ["valid queries"] {
+    ""
+    ""
+    ""
+  }
+  ["error with no context"] {
+    #"Invalid PromQL query: foo{bar="baz"  Error: 1:14: parse error: unexpected end of input inside braces"#
+  }
+  ["error with context"] {
+    #"Invalid PromQL query (my cool context): foo{bar="baz"  Error: 1:14: parse error: unexpected end of input inside braces"#
+  }
+}

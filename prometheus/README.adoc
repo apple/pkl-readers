@@ -1,0 +1,72 @@
+= pkl-reader-prometheus
+
+pkl-reader-prometheus provides a Pkl library and link:https://pkl-lang.org/main/current/language-reference/index.html#external-readers[external resource reader] for integrating Pkl with link:https://prometheus.io[Prometheus].
+
+== Setup
+
+CLI configuration:
+
+[source,bash]
+----
+--external-resource-reader reader+prometheus=pkl-reader-prometheus
+----
+
+PklProject configuration:
+
+[source,pkl]
+----
+evaluatorSettings {
+  externalResourceReaders {
+    ["reader+prometheus"] {
+      executable = "pkl-reader-prometheus"
+    }
+  }
+}
+----
+
+== Usage
+
+=== PromQL Query Validation
+
+Basic usage:
+
+[source,pkl]
+----
+import "@prometheus/promql.pkl"
+
+query: String(promql.isValid)
+----
+
+If the value of `query` is not a valid PromQL expression, evaluating this code might produce this output:
+
+[source]
+----
+Invalid PromQL query:
+foo:bar{baz="qux"
+
+Error: 1:18: parse error: unexpected end of input inside braces
+----
+
+Provide additional context:
+
+[source,pkl]
+----
+import "@prometheus/promql.pkl"
+
+class Alert {
+  name: String
+
+  query: String(promql.isValidWithContext("alert: \(name)"))
+}
+----
+
+When an additional context string is provided it becomes part of any thrown error messages.
+In this case, if the value of `query` is not a valid PromQL expression, evaluating this code might produce this output:
+
+[source]
+----
+Invalid PromQL query (<context string>):
+foo:bar{baz="qux"
+
+Error: 1:18: parse error: unexpected end of input inside braces
+----
