@@ -1,5 +1,5 @@
 //===----------------------------------------------------------------------===//
-// Copyright © 2025 Apple Inc. and the Pkl project authors. All rights reserved.
+// Copyright © 2025-2026 Apple Inc. and the Pkl project authors. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,4 +16,4 @@
 
 package helm
 
-//go:generate go tool pkl-gen-go --project-dir pkl pkl/helm.pkl --base-path github.com/apple/pkl-readers/helm
+//go:generate pkl run @go/gen.pkl --project-dir pkl pkl/helm.pkl --base-path github.com/apple/pkl-readers/helm

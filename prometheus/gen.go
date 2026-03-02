@@ -16,5 +16,4 @@
 
 package prometheus
 
-//go:generate go tool pkl-gen-go --project-dir pkl pkl/prometheus.pkl --base-path github.com/apple/pkl-readers/prometheus
-//go:generate go tool pkl-gen-go --project-dir pkl pkl/promql.pkl --base-path github.com/apple/pkl-readers/prometheus
+//go:generate pkl run @go/gen.pkl --project-dir pkl pkl/prometheus.pkl pkl/promql.pkl --base-path github.com/apple/pkl-readers/prometheus

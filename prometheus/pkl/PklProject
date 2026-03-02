@@ -22,6 +22,6 @@ dependencies {
     uri = "package://pkg.pkl-lang.org/pkl-pantry/pkl.experimental.uri@1.0.3"
   }
   ["go"] {
-    uri = "package://pkg.pkl-lang.org/pkl-go/pkl.golang@0.12.1"
+    uri = "package://pkg.pkl-lang.org/pkl-go/pkl.golang@0.13.1"
   }
 }
