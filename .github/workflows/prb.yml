@@ -173,15 +173,17 @@ jobs:
         fetch-depth: 0
     - name: Discover changed files
       id: changed-files
+      env:
+        BASE_REF: ${{ github.base_ref }}
       run: |-
-        git fetch origin ${{ github.base_ref }}
+        git fetch origin "$BASE_REF"
         set +e
         echo "Discovering changes for helm reader"
-        git diff --name-only --exit-code origin/${{ github.base_ref }} -- basePklProject.pkl .github/** shared/go/** helm/**
+        git diff --name-only --exit-code "origin/$BASE_REF" -- basePklProject.pkl .github/** shared/go/** helm/**
         echo "helm=$?" >> "$GITHUB_OUTPUT"
         echo
         echo "Discovering changes for prometheus reader"
-        git diff --name-only --exit-code origin/${{ github.base_ref }} -- basePklProject.pkl .github/** shared/go/** prometheus/**
+        git diff --name-only --exit-code "origin/$BASE_REF" -- basePklProject.pkl .github/** shared/go/** prometheus/**
         echo "prometheus=$?" >> "$GITHUB_OUTPUT"
         echo
   upload-event-file:

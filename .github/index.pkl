@@ -122,14 +122,17 @@ prb = (build) {
         new {
           name = "Discover changed files"
           id = "changed-files"
+          env {
+            ["BASE_REF"] = context.github.baseRef
+          }
           run =
             new Listing {
-              "git fetch origin \(context.github.baseRef)"
+              #"git fetch origin "$BASE_REF""#
               "set +e"
               for (reader in readers) {
                 """
                 echo "Discovering changes for \(reader.name) reader"
-                git diff --name-only --exit-code origin/\(context.github.baseRef) -- \(reader.changedFilePatterns.join(" "))
+                git diff --name-only --exit-code "origin/$BASE_REF" -- \(reader.changedFilePatterns.join(" "))
                 echo "\(reader.name)=$?" >> "$GITHUB_OUTPUT"
                 echo
                 """

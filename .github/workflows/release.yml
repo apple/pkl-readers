@@ -298,14 +298,13 @@ jobs:
     - name: Publish release
       env:
         GH_TOKEN: ${{ github.token }}
-        GH_REPO: ${{ github.repository }}
+        PACKAGE_WITH_VERSION: ${{ github.ref_name }}
       working-directory: helm
       run: |-
-        gh release create ${{ github.ref_name }} \
-          --title "${{ github.ref_name }}" \
-          --target "${{ github.sha }}" \
+        gh release create "${PACKAGE_WITH_VERSION}" \
+          --title "${PACKAGE_WITH_VERSION}" \
           --verify-tag \
-          --notes "Release of ${{ github.ref_name }}" \
+          --notes "Release of ${PACKAGE_WITH_VERSION}" \
           out/pkl-package/* out/pkl-reader-helm/*.bin
   build-prometheus:
     name: 'build: prometheus'
@@ -446,14 +445,13 @@ jobs:
     - name: Publish release
       env:
         GH_TOKEN: ${{ github.token }}
-        GH_REPO: ${{ github.repository }}
+        PACKAGE_WITH_VERSION: ${{ github.ref_name }}
       working-directory: prometheus
       run: |-
-        gh release create ${{ github.ref_name }} \
-          --title "${{ github.ref_name }}" \
-          --target "${{ github.sha }}" \
+        gh release create "${PACKAGE_WITH_VERSION}" \
+          --title "${PACKAGE_WITH_VERSION}" \
           --verify-tag \
-          --notes "Release of ${{ github.ref_name }}" \
+          --notes "Release of ${PACKAGE_WITH_VERSION}" \
           out/pkl-package/* out/pkl-reader-prometheus/*.bin
   publish-test-results:
     if: '!cancelled()'
