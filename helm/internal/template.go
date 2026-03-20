@@ -1,5 +1,5 @@
 //===----------------------------------------------------------------------===//
-// Copyright © 2025 Apple Inc. and the Pkl project authors. All rights reserved.
+// Copyright © 2025-2026 Apple Inc. and the Pkl project authors. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,8 +27,10 @@ import (
 	"strings"
 
 	"github.com/apple/pkl-readers/helm/internal/msg"
+	"github.com/apple/pkl-readers/helm/internal/msg/hookpolicy"
 	"helm.sh/helm/v4/pkg/action"
 	"helm.sh/helm/v4/pkg/chart"
+	"helm.sh/helm/v4/pkg/chart/common"
 	"helm.sh/helm/v4/pkg/chart/v2/loader"
 	"helm.sh/helm/v4/pkg/downloader"
 	"helm.sh/helm/v4/pkg/getter"
@@ -53,8 +55,18 @@ func (r helmReader) template(req msg.Template) ([]byte, error) {
 	client.IncludeCRDs = true
 	client.ReleaseName = req.GetReleaseName()
 	client.Namespace = req.GetNamespace()
+	client.DisableHooks = req.GetHooks() == hookpolicy.Disabled
+	client.SkipSchemaValidation = req.GetSkipSchemaValidation()
+	client.APIVersions = req.GetApiVersions()
 	if version := req.GetVersion(); version != nil {
 		client.Version = *version
+	}
+	if kubeVersion := req.GetKubeVersion(); kubeVersion != nil {
+		parsedKubeVersion, err := common.ParseKubeVersion(*kubeVersion)
+		if err != nil {
+			return nil, fmt.Errorf("invalid kube version '%s': %w", *kubeVersion, err)
+		}
+		client.KubeVersion = parsedKubeVersion
 	}
 
 	slog.Debug(
@@ -136,7 +148,7 @@ func (r helmReader) template(req msg.Template) ([]byte, error) {
 	_, _ = fmt.Fprintln(&manifests, strings.TrimSpace(rel.Manifest))
 	if !client.DisableHooks {
 		for _, m := range rel.Hooks {
-			if slices.Contains(m.Events, release.HookTest) {
+			if req.GetHooks() == hookpolicy.SkipTests && slices.Contains(m.Events, release.HookTest) {
 				continue
 			}
 			_, _ = fmt.Fprintf(&manifests, "---\n# Source: %s\n%s\n", m.Path, m.Manifest)

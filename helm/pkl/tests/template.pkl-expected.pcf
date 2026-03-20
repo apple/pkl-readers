@@ -75,7 +75,29 @@ examples {
         matchLabels:
           app.kubernetes.io/name: my-chart
           app.kubernetes.io/instance: my-release
-    
+    ---
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      annotations:
+        helm.sh/hook: test
+      labels:
+        helm.sh/chart: my-chart-0.1.0
+        app.kubernetes.io/name: my-chart
+        app.kubernetes.io/instance: my-release
+        app.kubernetes.io/version: 1.16.0
+        app.kubernetes.io/managed-by: Helm
+      name: my-release-my-chart-test-connection
+    spec:
+      restartPolicy: Never
+      containers:
+      - image: busybox
+        command:
+        - wget
+        args:
+        - my-release-my-chart:80
+        name: wget
+
     """
   }
 }

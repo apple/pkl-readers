@@ -40,6 +40,7 @@ examples {
 
         releaseName = "my-release"
         namespace = "my-namespace"
+        kubeVersion = "1.23.4"
         values = new Dynamic {
           image {
             repository = "my-registry.example.com/nginx"
