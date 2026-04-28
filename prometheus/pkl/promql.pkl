@@ -16,7 +16,7 @@
 
 @ModuleInfo { minPklVersion = "0.30.0" }
 @go.Package { name = "github.com/apple/pkl-readers/\(prometheus.readerName)/internal/msg/promql" }
-module pkl.prometheus.promql
+module prometheus.promql
 
 import "@go/go.pkl"
 
@@ -29,10 +29,17 @@ class Parse extends prometheus.Request {
   /// PromQL query to parse.
   query: String
 
+  /// Prometheus [feature flags](https://prometheus.io/docs/prometheus/latest/feature_flags/) to enable.
+  ///
+  /// [Feature] documents supported features.
+  /// Unrecognized features result in a warning and are ignored.
+  enableFeatures: Listing<Feature>(isDistinct)
+
   /// Resulting error message from parsing [query].
   ///
   /// Empty string if no parse error occurrs.
-  hidden fixed parseError: String = if (query.isEmpty) "" else read(requestUri.toString()).text
+  hidden fixed parseError: String =
+    if (query.isEmpty) "" else read?(requestUri.toString())?.text ?? ""
 
   /// Indicates if [query] is valid PromQL.
   ///
@@ -51,6 +58,17 @@ class Parse extends prometheus.Request {
     else
       throw("Invalid PromQL query (\(context)):\n\(query)\n\nError:\n\(parseError)")
 }
+
+/// Supported PromQL [feature flags](https://prometheus.io/docs/prometheus/latest/feature_flags/).
+///
+/// Arbitrary strings are accepted to avoid breaking changes as upstream prometheus adds or removes
+/// flags for features.
+typealias Feature =
+  "promql-experimental-functions"
+    | "promql-duration-expr"
+    | "promql-extended-range-selectors"
+    | "promql-binop-fill-modifiers"
+    | String
 
 /// A function that may be used as a type constraint to check if a [String] is valid PromQL query.
 ///

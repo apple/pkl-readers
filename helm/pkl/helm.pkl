@@ -16,7 +16,7 @@
 
 @ModuleInfo { minPklVersion = "0.30.0" }
 @go.Package { name = "github.com/apple/pkl-readers/\(readerName)/internal/msg" }
-module pkl.helm.helm
+module helm.helm
 
 import "pkl:pklbinary"
 import "pkl:yaml"

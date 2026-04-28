@@ -1,4 +1,4 @@
-// Code generated from Pkl module `pkl.helm.helm`. DO NOT EDIT.
+// Code generated from Pkl module `helm.helm`. DO NOT EDIT.
 package msg
 
 import (

@@ -1,4 +1,4 @@
-// Code generated from Pkl module `pkl.prometheus.promql`. DO NOT EDIT.
+// Code generated from Pkl module `prometheus.promql`. DO NOT EDIT.
 package promql
 
 import (
