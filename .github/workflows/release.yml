@@ -21,9 +21,9 @@ jobs:
     - name: Setup Pkl
       id: setup-pkl
       env:
-        PKL_VERSION: 0.31.0
+        PKL_VERSION: 0.31.1
         PKL_FILENAME: pkl
-        PKL_DOWNLOAD_URL: https://github.com/apple/pkl/releases/download/0.31.0/pkl-linux-amd64
+        PKL_DOWNLOAD_URL: https://github.com/apple/pkl/releases/download/0.31.1/pkl-linux-amd64
       shell: bash
       run: |-
         DIR="$(mktemp -d /tmp/pkl-$PKL_VERSION-XXXXXX)"
@@ -78,9 +78,9 @@ jobs:
     - name: Setup Pkl
       id: setup-pkl
       env:
-        PKL_VERSION: 0.31.0
+        PKL_VERSION: 0.31.1
         PKL_FILENAME: pkl
-        PKL_DOWNLOAD_URL: https://github.com/apple/pkl/releases/download/0.31.0/pkl-linux-amd64
+        PKL_DOWNLOAD_URL: https://github.com/apple/pkl/releases/download/0.31.1/pkl-linux-amd64
       shell: bash
       run: |-
         DIR="$(mktemp -d /tmp/pkl-$PKL_VERSION-XXXXXX)"
@@ -124,9 +124,9 @@ jobs:
     - name: Setup Pkl
       id: setup-pkl
       env:
-        PKL_VERSION: 0.31.0
+        PKL_VERSION: 0.31.1
         PKL_FILENAME: pkl
-        PKL_DOWNLOAD_URL: https://github.com/apple/pkl/releases/download/0.31.0/pkl-linux-amd64
+        PKL_DOWNLOAD_URL: https://github.com/apple/pkl/releases/download/0.31.1/pkl-linux-amd64
       shell: bash
       run: |-
         DIR="$(mktemp -d /tmp/pkl-$PKL_VERSION-XXXXXX)"
@@ -271,9 +271,9 @@ jobs:
     - name: Setup Pkl
       id: setup-pkl
       env:
-        PKL_VERSION: 0.31.0
+        PKL_VERSION: 0.31.1
         PKL_FILENAME: pkl
-        PKL_DOWNLOAD_URL: https://github.com/apple/pkl/releases/download/0.31.0/pkl-linux-amd64
+        PKL_DOWNLOAD_URL: https://github.com/apple/pkl/releases/download/0.31.1/pkl-linux-amd64
       shell: bash
       run: |-
         DIR="$(mktemp -d /tmp/pkl-$PKL_VERSION-XXXXXX)"
@@ -418,9 +418,9 @@ jobs:
     - name: Setup Pkl
       id: setup-pkl
       env:
-        PKL_VERSION: 0.31.0
+        PKL_VERSION: 0.31.1
         PKL_FILENAME: pkl
-        PKL_DOWNLOAD_URL: https://github.com/apple/pkl/releases/download/0.31.0/pkl-linux-amd64
+        PKL_DOWNLOAD_URL: https://github.com/apple/pkl/releases/download/0.31.1/pkl-linux-amd64
       shell: bash
       run: |-
         DIR="$(mktemp -d /tmp/pkl-$PKL_VERSION-XXXXXX)"
@@ -471,3 +471,37 @@ jobs:
       with:
         comment_mode: 'off'
         files: test-results-xml-*/**/*.xml
+  trigger-downstream-builds:
+    if: github.repository_owner == 'apple'
+    needs:
+    - check-format-pkl
+    - check-format-go
+    - check-license-headers
+    - test-helm
+    - test-prometheus
+    - build-helm
+    - build-helm-macos-universal-binary
+    - publish-helm
+    - build-prometheus
+    - build-prometheus-macos-universal-binary
+    - publish-prometheus
+    - publish-test-results
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create app token
+      id: app-token
+      uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2
+      with:
+        app-id: ${{ secrets.PKL_CI_CLIENT_ID }}
+        private-key: ${{ secrets.PKL_CI }}
+        owner: ${{ github.repository_owner }}
+    - name: Trigger pkl-package-docs build
+      env:
+        GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        SOURCE_RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      run: |-
+        gh workflow run \
+          --repo apple/pkl-package-docs \
+          --ref main \
+          --field source_run="${SOURCE_RUN}" \
+          main.yml

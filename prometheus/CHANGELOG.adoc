@@ -1,5 +1,18 @@
 = pkl-reader-prometheus / pkl.prometheus Changelog
 
+[[release-0.2.0]]
+== Release 0.2.0 (2026-04-29)
+
+=== Changes
+
+* Upgrade dependencies, move to Prometheus v3.11.3 (https://github.com/apple/pkl-readers/pull/17[#17], https://github.com/apple/pkl-readers/pull/20[#20])
+
+=== Contributors ❤️
+
+Thank you to all of our contributors!
+
+* https://github.com/HT154[@HT154]
+
 [[release-0.1.0]]
 == Release 0.1.0 (2025-12-15)
 
