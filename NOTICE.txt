@@ -394,7 +394,7 @@ SOFTWARE.
 
 ---
 github.com/ProtonMail/go-crypto
-BSD-3-Clause - https://github.com/ProtonMail/go-crypto/blob/v1.4.0/LICENSE
+BSD-3-Clause - https://github.com/ProtonMail/go-crypto/blob/v1.4.1/LICENSE
 
 ***
 
@@ -1971,7 +1971,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ---
 github.com/fatih/color
-MIT - https://github.com/fatih/color/blob/v1.18.0/LICENSE.md
+MIT - https://github.com/fatih/color/blob/v1.19.0/LICENSE.md
 
 ***
 
@@ -1999,7 +1999,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ---
 github.com/fluxcd/cli-utils/pkg
-Apache-2.0 - https://github.com/fluxcd/cli-utils/blob/v0.37.2-flux.1/LICENSE
+Apache-2.0 - https://github.com/fluxcd/cli-utils/blob/v1.1.0/LICENSE
 
 ***
 
@@ -2208,7 +2208,7 @@ Apache-2.0 - https://github.com/fluxcd/cli-utils/blob/v0.37.2-flux.1/LICENSE
 
 ---
 github.com/fxamacker/cbor/v2
-MIT - https://github.com/fxamacker/cbor/blob/v2.9.0/LICENSE
+MIT - https://github.com/fxamacker/cbor/blob/v2.9.1/LICENSE
 
 ***
 
@@ -2490,7 +2490,7 @@ Apache-2.0 - https://github.com/go-logr/logr/blob/v1.4.3/LICENSE
 
 ---
 github.com/go-openapi/jsonpointer
-Apache-2.0 - https://github.com/go-openapi/jsonpointer/blob/v0.22.5/LICENSE
+Apache-2.0 - https://github.com/go-openapi/jsonpointer/blob/v0.23.1/LICENSE
 
 ***
 
@@ -2909,7 +2909,7 @@ Apache-2.0 - https://github.com/go-openapi/jsonreference/blob/v0.21.5/LICENSE
 
 ---
 github.com/go-openapi/swag
-Apache-2.0 - https://github.com/go-openapi/swag/blob/v0.25.5/LICENSE
+Apache-2.0 - https://github.com/go-openapi/swag/blob/v0.26.0/LICENSE
 
 ***
 
@@ -3119,7 +3119,7 @@ Apache-2.0 - https://github.com/go-openapi/swag/blob/v0.25.5/LICENSE
 
 ---
 github.com/go-openapi/swag/cmdutils
-Apache-2.0 - https://github.com/go-openapi/swag/blob/cmdutils/v0.25.5/cmdutils/LICENSE
+Apache-2.0 - https://github.com/go-openapi/swag/blob/cmdutils/v0.26.0/cmdutils/LICENSE
 
 ***
 
@@ -3329,7 +3329,7 @@ Apache-2.0 - https://github.com/go-openapi/swag/blob/cmdutils/v0.25.5/cmdutils/L
 
 ---
 github.com/go-openapi/swag/conv
-Apache-2.0 - https://github.com/go-openapi/swag/blob/conv/v0.25.5/conv/LICENSE
+Apache-2.0 - https://github.com/go-openapi/swag/blob/conv/v0.26.0/conv/LICENSE
 
 ***
 
@@ -3539,7 +3539,7 @@ Apache-2.0 - https://github.com/go-openapi/swag/blob/conv/v0.25.5/conv/LICENSE
 
 ---
 github.com/go-openapi/swag/fileutils
-Apache-2.0 - https://github.com/go-openapi/swag/blob/fileutils/v0.25.5/fileutils/LICENSE
+Apache-2.0 - https://github.com/go-openapi/swag/blob/fileutils/v0.26.0/fileutils/LICENSE
 
 ***
 
@@ -3749,7 +3749,7 @@ Apache-2.0 - https://github.com/go-openapi/swag/blob/fileutils/v0.25.5/fileutils
 
 ---
 github.com/go-openapi/swag/jsonname
-Apache-2.0 - https://github.com/go-openapi/swag/blob/jsonname/v0.25.5/jsonname/LICENSE
+Apache-2.0 - https://github.com/go-openapi/swag/blob/jsonname/v0.26.0/jsonname/LICENSE
 
 ***
 
@@ -3959,7 +3959,7 @@ Apache-2.0 - https://github.com/go-openapi/swag/blob/jsonname/v0.25.5/jsonname/L
 
 ---
 github.com/go-openapi/swag/jsonutils
-Apache-2.0 - https://github.com/go-openapi/swag/blob/jsonutils/v0.25.5/jsonutils/LICENSE
+Apache-2.0 - https://github.com/go-openapi/swag/blob/jsonutils/v0.26.0/jsonutils/LICENSE
 
 ***
 
@@ -4169,7 +4169,7 @@ Apache-2.0 - https://github.com/go-openapi/swag/blob/jsonutils/v0.25.5/jsonutils
 
 ---
 github.com/go-openapi/swag/loading
-Apache-2.0 - https://github.com/go-openapi/swag/blob/loading/v0.25.5/loading/LICENSE
+Apache-2.0 - https://github.com/go-openapi/swag/blob/loading/v0.26.0/loading/LICENSE
 
 ***
 
@@ -4379,7 +4379,7 @@ Apache-2.0 - https://github.com/go-openapi/swag/blob/loading/v0.25.5/loading/LIC
 
 ---
 github.com/go-openapi/swag/mangling
-Apache-2.0 - https://github.com/go-openapi/swag/blob/mangling/v0.25.5/mangling/LICENSE
+Apache-2.0 - https://github.com/go-openapi/swag/blob/mangling/v0.26.0/mangling/LICENSE
 
 ***
 
@@ -4589,7 +4589,7 @@ Apache-2.0 - https://github.com/go-openapi/swag/blob/mangling/v0.25.5/mangling/L
 
 ---
 github.com/go-openapi/swag/netutils
-Apache-2.0 - https://github.com/go-openapi/swag/blob/netutils/v0.25.5/netutils/LICENSE
+Apache-2.0 - https://github.com/go-openapi/swag/blob/netutils/v0.26.0/netutils/LICENSE
 
 ***
 
@@ -4799,7 +4799,7 @@ Apache-2.0 - https://github.com/go-openapi/swag/blob/netutils/v0.25.5/netutils/L
 
 ---
 github.com/go-openapi/swag/stringutils
-Apache-2.0 - https://github.com/go-openapi/swag/blob/stringutils/v0.25.5/stringutils/LICENSE
+Apache-2.0 - https://github.com/go-openapi/swag/blob/stringutils/v0.26.0/stringutils/LICENSE
 
 ***
 
@@ -5009,7 +5009,7 @@ Apache-2.0 - https://github.com/go-openapi/swag/blob/stringutils/v0.25.5/stringu
 
 ---
 github.com/go-openapi/swag/typeutils
-Apache-2.0 - https://github.com/go-openapi/swag/blob/typeutils/v0.25.5/typeutils/LICENSE
+Apache-2.0 - https://github.com/go-openapi/swag/blob/typeutils/v0.26.0/typeutils/LICENSE
 
 ***
 
@@ -5219,7 +5219,7 @@ Apache-2.0 - https://github.com/go-openapi/swag/blob/typeutils/v0.25.5/typeutils
 
 ---
 github.com/go-openapi/swag/yamlutils
-Apache-2.0 - https://github.com/go-openapi/swag/blob/yamlutils/v0.25.5/yamlutils/LICENSE
+Apache-2.0 - https://github.com/go-openapi/swag/blob/yamlutils/v0.26.0/yamlutils/LICENSE
 
 ***
 
@@ -5994,20 +5994,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 ---
-github.com/gregjones/httpcache
-MIT - https://github.com/gregjones/httpcache/blob/901d90724c79/LICENSE.txt
-
-***
-
-Copyright © 2012 Greg Jones (greg.jones@gmail.com)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
----
 github.com/huandu/xstrings
 MIT - https://github.com/huandu/xstrings/blob/v1.5.0/LICENSE
 
@@ -6178,7 +6164,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ---
 github.com/lib/pq
-MIT - https://github.com/lib/pq/blob/v1.11.2/LICENSE
+MIT - https://github.com/lib/pq/blob/v1.12.3/LICENSE
 
 ***
 
@@ -6271,7 +6257,7 @@ SOFTWARE.
 
 ---
 github.com/mattn/go-isatty
-MIT - https://github.com/mattn/go-isatty/blob/v0.0.20/LICENSE
+MIT - https://github.com/mattn/go-isatty/blob/v0.0.22/LICENSE
 
 ***
 
@@ -6288,7 +6274,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ---
 github.com/mattn/go-runewidth
-MIT - https://github.com/mattn/go-runewidth/blob/v0.0.20/LICENSE
+MIT - https://github.com/mattn/go-runewidth/blob/v0.0.23/LICENSE
 
 ***
 
@@ -8386,7 +8372,7 @@ Apache-2.0 - https://github.com/prometheus/procfs/blob/v0.20.1/LICENSE
 
 ---
 github.com/prometheus/prometheus
-Apache-2.0 - https://github.com/prometheus/prometheus/blob/v0.310.0/LICENSE
+Apache-2.0 - https://github.com/prometheus/prometheus/blob/v0.311.3/LICENSE
 
 ***
 
@@ -9714,7 +9700,7 @@ THE SOFTWARE.
 
 ---
 go.opentelemetry.io/proto/otlp
-Apache-2.0 - https://github.com/open-telemetry/opentelemetry-proto-go/blob/otlp/v1.9.0/otlp/LICENSE
+Apache-2.0 - https://github.com/open-telemetry/opentelemetry-proto-go/blob/otlp/v1.10.0/otlp/LICENSE
 
 ***
 
@@ -9950,7 +9936,7 @@ THE SOFTWARE.
 
 ---
 go.yaml.in/yaml/v2
-Apache-2.0 - https://github.com/yaml/go-yaml/blob/v2.4.3/LICENSE
+Apache-2.0 - https://github.com/yaml/go-yaml/blob/v2.4.4/LICENSE
 
 ***
 
@@ -10217,7 +10203,7 @@ limitations under the License.
 
 ---
 golang.org/x/crypto
-BSD-3-Clause - https://cs.opensource.google/go/x/crypto/+/v0.48.0:LICENSE
+BSD-3-Clause - https://cs.opensource.google/go/x/crypto/+/v0.50.0:LICENSE
 
 ***
 
@@ -10252,7 +10238,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ---
 golang.org/x/net
-BSD-3-Clause - https://cs.opensource.google/go/x/net/+/v0.51.0:LICENSE
+BSD-3-Clause - https://cs.opensource.google/go/x/net/+/v0.53.0:LICENSE
 
 ***
 
@@ -10287,7 +10273,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ---
 golang.org/x/oauth2
-BSD-3-Clause - https://cs.opensource.google/go/x/oauth2/+/v0.35.0:LICENSE
+BSD-3-Clause - https://cs.opensource.google/go/x/oauth2/+/v0.36.0:LICENSE
 
 ***
 
@@ -10322,7 +10308,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ---
 golang.org/x/sync
-BSD-3-Clause - https://cs.opensource.google/go/x/sync/+/v0.19.0:LICENSE
+BSD-3-Clause - https://cs.opensource.google/go/x/sync/+/v0.20.0:LICENSE
 
 ***
 
@@ -10357,7 +10343,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ---
 golang.org/x/sys
-BSD-3-Clause - https://cs.opensource.google/go/x/sys/+/v0.41.0:LICENSE
+BSD-3-Clause - https://cs.opensource.google/go/x/sys/+/v0.43.0:LICENSE
 
 ***
 
@@ -10392,7 +10378,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ---
 golang.org/x/term
-BSD-3-Clause - https://cs.opensource.google/go/x/term/+/v0.40.0:LICENSE
+BSD-3-Clause - https://cs.opensource.google/go/x/term/+/v0.42.0:LICENSE
 
 ***
 
@@ -10427,7 +10413,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ---
 golang.org/x/text
-BSD-3-Clause - https://cs.opensource.google/go/x/text/+/v0.34.0:LICENSE
+BSD-3-Clause - https://cs.opensource.google/go/x/text/+/v0.36.0:LICENSE
 
 ***
 
@@ -10462,7 +10448,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ---
 golang.org/x/time/rate
-BSD-3-Clause - https://cs.opensource.google/go/x/time/+/v0.14.0:LICENSE
+BSD-3-Clause - https://cs.opensource.google/go/x/time/+/v0.15.0:LICENSE
 
 ***
 
@@ -10497,7 +10483,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ---
 google.golang.org/protobuf
-BSD-3-Clause - https://github.com/protocolbuffers/protobuf-go/blob/v1.36.11/LICENSE
+BSD-3-Clause - https://github.com/protocolbuffers/protobuf-go/blob/f2248ac996af/LICENSE
 
 ***
 
@@ -10601,7 +10587,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ---
 helm.sh/helm/v4
-Apache-2.0 - https://github.com/helm/helm/blob/v4.1.1/LICENSE
+Apache-2.0 - https://github.com/helm/helm/blob/v4.1.4/LICENSE
 
 ***
 
@@ -10811,7 +10797,7 @@ Apache-2.0 - https://github.com/helm/helm/blob/v4.1.1/LICENSE
 
 ---
 k8s.io/api
-Apache-2.0 - https://github.com/kubernetes/api/blob/v0.35.2/LICENSE
+Apache-2.0 - https://github.com/kubernetes/api/blob/v0.36.0/LICENSE
 
 ***
 
@@ -11021,7 +11007,7 @@ Apache-2.0 - https://github.com/kubernetes/api/blob/v0.35.2/LICENSE
 
 ---
 k8s.io/apiextensions-apiserver/pkg/apis/apiextensions
-Apache-2.0 - https://github.com/kubernetes/apiextensions-apiserver/blob/v0.35.2/LICENSE
+Apache-2.0 - https://github.com/kubernetes/apiextensions-apiserver/blob/v0.36.0/LICENSE
 
 ***
 
@@ -11231,7 +11217,7 @@ Apache-2.0 - https://github.com/kubernetes/apiextensions-apiserver/blob/v0.35.2/
 
 ---
 k8s.io/apimachinery/pkg
-Apache-2.0 - https://github.com/kubernetes/apimachinery/blob/v0.35.2/LICENSE
+Apache-2.0 - https://github.com/kubernetes/apimachinery/blob/v0.36.0/LICENSE
 
 ***
 
@@ -11441,7 +11427,7 @@ Apache-2.0 - https://github.com/kubernetes/apimachinery/blob/v0.35.2/LICENSE
 
 ---
 k8s.io/apimachinery/third_party/forked/golang
-BSD-3-Clause - https://github.com/kubernetes/apimachinery/blob/v0.35.2/third_party/forked/golang/LICENSE
+BSD-3-Clause - https://github.com/kubernetes/apimachinery/blob/v0.36.0/third_party/forked/golang/LICENSE
 
 ***
 
@@ -11476,7 +11462,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ---
 k8s.io/apiserver/pkg/endpoints/deprecation
-Apache-2.0 - https://github.com/kubernetes/apiserver/blob/v0.35.2/LICENSE
+Apache-2.0 - https://github.com/kubernetes/apiserver/blob/v0.36.0/LICENSE
 
 ***
 
@@ -11686,7 +11672,7 @@ Apache-2.0 - https://github.com/kubernetes/apiserver/blob/v0.35.2/LICENSE
 
 ---
 k8s.io/cli-runtime/pkg
-Apache-2.0 - https://github.com/kubernetes/cli-runtime/blob/v0.35.2/LICENSE
+Apache-2.0 - https://github.com/kubernetes/cli-runtime/blob/v0.36.0/LICENSE
 
 ***
 
@@ -11896,7 +11882,7 @@ Apache-2.0 - https://github.com/kubernetes/cli-runtime/blob/v0.35.2/LICENSE
 
 ---
 k8s.io/client-go
-Apache-2.0 - https://github.com/kubernetes/client-go/blob/v0.35.2/LICENSE
+Apache-2.0 - https://github.com/kubernetes/client-go/blob/v0.36.0/LICENSE
 
 ***
 
@@ -12106,7 +12092,7 @@ Apache-2.0 - https://github.com/kubernetes/client-go/blob/v0.35.2/LICENSE
 
 ---
 k8s.io/client-go/third_party/forked/golang/template
-BSD-3-Clause - https://github.com/kubernetes/client-go/blob/v0.35.2/third_party/forked/golang/LICENSE
+BSD-3-Clause - https://github.com/kubernetes/client-go/blob/v0.36.0/third_party/forked/golang/LICENSE
 
 ***
 
@@ -12140,8 +12126,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 ---
+k8s.io/client-go/third_party/forked/httpcache
+MIT - https://github.com/kubernetes/client-go/blob/v0.36.0/third_party/forked/httpcache/LICENSE
+
+***
+
+Copyright © 2012 Greg Jones (greg.jones@gmail.com)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+---
 k8s.io/component-base/version
-Apache-2.0 - https://github.com/kubernetes/component-base/blob/v0.35.2/LICENSE
+Apache-2.0 - https://github.com/kubernetes/component-base/blob/v0.36.0/LICENSE
 
 ***
 
@@ -12351,7 +12351,7 @@ Apache-2.0 - https://github.com/kubernetes/component-base/blob/v0.35.2/LICENSE
 
 ---
 k8s.io/klog/v2
-Apache-2.0 - https://github.com/kubernetes/klog/blob/v2.130.1/LICENSE
+Apache-2.0 - https://github.com/kubernetes/klog/blob/v2.140.0/LICENSE
 
 ***
 
@@ -12550,7 +12550,7 @@ third-party archives.
 
 ---
 k8s.io/kube-openapi/pkg
-Apache-2.0 - https://github.com/kubernetes/kube-openapi/blob/a19766b6e2d4/LICENSE
+Apache-2.0 - https://github.com/kubernetes/kube-openapi/blob/8949caaa1199/LICENSE
 
 ***
 
@@ -12760,7 +12760,7 @@ Apache-2.0 - https://github.com/kubernetes/kube-openapi/blob/a19766b6e2d4/LICENS
 
 ---
 k8s.io/kube-openapi/pkg/internal/third_party/go-json-experiment/json
-BSD-3-Clause - https://github.com/kubernetes/kube-openapi/blob/a19766b6e2d4/pkg/internal/third_party/go-json-experiment/json/LICENSE
+BSD-3-Clause - https://github.com/kubernetes/kube-openapi/blob/8949caaa1199/pkg/internal/third_party/go-json-experiment/json/LICENSE
 
 ***
 
@@ -12795,7 +12795,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ---
 k8s.io/kube-openapi/pkg/validation/spec
-Apache-2.0 - https://github.com/kubernetes/kube-openapi/blob/a19766b6e2d4/pkg/validation/spec/LICENSE
+Apache-2.0 - https://github.com/kubernetes/kube-openapi/blob/8949caaa1199/pkg/validation/spec/LICENSE
 
 ***
 
@@ -13005,7 +13005,7 @@ Apache-2.0 - https://github.com/kubernetes/kube-openapi/blob/a19766b6e2d4/pkg/va
 
 ---
 k8s.io/kubectl/pkg
-Apache-2.0 - https://github.com/kubernetes/kubectl/blob/v0.35.2/LICENSE
+Apache-2.0 - https://github.com/kubernetes/kubectl/blob/v0.36.0/LICENSE
 
 ***
 
@@ -13214,7 +13214,7 @@ Apache-2.0 - https://github.com/kubernetes/kubectl/blob/v0.35.2/LICENSE
 
 ---
 k8s.io/utils
-Apache-2.0 - https://github.com/kubernetes/utils/blob/b8788abfbbc2/LICENSE
+Apache-2.0 - https://github.com/kubernetes/utils/blob/28399d86e0b5/LICENSE
 
 ***
 
@@ -13424,7 +13424,7 @@ Apache-2.0 - https://github.com/kubernetes/utils/blob/b8788abfbbc2/LICENSE
 
 ---
 k8s.io/utils/internal/third_party/forked/golang/net
-BSD-3-Clause - https://github.com/kubernetes/utils/blob/b8788abfbbc2/internal/third_party/forked/golang/LICENSE
+BSD-3-Clause - https://github.com/kubernetes/utils/blob/28399d86e0b5/internal/third_party/forked/golang/LICENSE
 
 ***
 
@@ -13668,7 +13668,7 @@ Apache-2.0 - https://github.com/oras-project/oras-go/blob/v2.6.0/LICENSE
 
 ---
 sigs.k8s.io/controller-runtime/pkg
-Apache-2.0 - https://github.com/kubernetes-sigs/controller-runtime/blob/v0.23.1/LICENSE
+Apache-2.0 - https://github.com/kubernetes-sigs/controller-runtime/blob/v0.23.3/LICENSE
 
 ***
 
@@ -14997,7 +14997,7 @@ Apache-2.0 - https://github.com/kubernetes-sigs/randfill/blob/v1.0.0/LICENSE
 
 ---
 sigs.k8s.io/structured-merge-diff/v6
-Apache-2.0 - https://github.com/kubernetes-sigs/structured-merge-diff/blob/v6.3.2/LICENSE
+Apache-2.0 - https://github.com/kubernetes-sigs/structured-merge-diff/blob/v6.4.0/LICENSE
 
 ***
 

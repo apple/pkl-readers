@@ -1,9 +1,9 @@
-// Code generated from Pkl module `pkl.helm.helm`. DO NOT EDIT.
+// Code generated from Pkl module `helm.helm`. DO NOT EDIT.
 package msg
 
 import "github.com/apple/pkl-go/pkl"
 
 func init() {
-	pkl.RegisterStrictMapping("pkl.helm.helm", Helm{})
-	pkl.RegisterStrictMapping("pkl.helm.helm#Template", TemplateImpl{})
+	pkl.RegisterStrictMapping("helm.helm", Helm{})
+	pkl.RegisterStrictMapping("helm.helm#Template", TemplateImpl{})
 }

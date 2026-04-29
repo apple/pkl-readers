@@ -17,13 +17,34 @@
 package internal
 
 import (
+	"log/slog"
+
 	"github.com/apple/pkl-readers/prometheus/internal/msg/promql"
 	"github.com/prometheus/prometheus/promql/parser"
 )
 
+func toParserOptions(features []string) parser.Options {
+	var opt parser.Options
+	for _, o := range features {
+		switch o {
+		case "promql-experimental-functions":
+			opt.EnableExperimentalFunctions = true
+		case "promql-duration-expr":
+			opt.ExperimentalDurationExpr = true
+		case "promql-extended-range-selectors":
+			opt.EnableExtendedRangeSelectors = true
+		case "promql-binop-fill-modifiers":
+			opt.EnableBinopFillModifiers = true
+		default:
+			slog.Warn("unknown feature in enableFeatures", "feature_name", o)
+		}
+	}
+	return opt
+}
+
 func (r prometheusReader) parse(req promql.Parse) ([]byte, error) {
-	p := parser.NewParser(req.GetQuery())
-	if _, err := p.ParseExpr(); err != nil {
+	p := parser.NewParser(toParserOptions(req.GetEnableFeatures()))
+	if _, err := p.ParseExpr(req.GetQuery()); err != nil {
 		// intentionally return error as resource content and not an error
 		// let calling pkl code determine how to handle this
 		return []byte(err.Error()), nil

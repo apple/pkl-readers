@@ -1,4 +1,4 @@
-// Code generated from Pkl module `pkl.promtheus.promtheus`. DO NOT EDIT.
+// Code generated from Pkl module `prometheus.prometheus`. DO NOT EDIT.
 package msg
 
 type Request interface {

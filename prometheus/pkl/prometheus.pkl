@@ -16,7 +16,7 @@
 
 @ModuleInfo { minPklVersion = "0.30.0" }
 @go.Package { name = "github.com/apple/pkl-readers/\(readerName)/internal/msg" }
-module pkl.promtheus.promtheus
+module prometheus.prometheus
 
 import "pkl:pklbinary"
 
