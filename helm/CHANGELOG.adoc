@@ -1,5 +1,18 @@
 = pkl-reader-helm / pkl.helm Changelog
 
+[[release-0.1.2]]
+== Release 0.1.2 (2026-04-29)
+
+=== Changes
+
+* Upgrade dependencies, move to Helm v4.1.4 (https://github.com/apple/pkl-readers/pull/13[#13], https://github.com/apple/pkl-readers/pull/17[#17], https://github.com/apple/pkl-readers/pull/20[#20])
+
+=== Contributors ❤️
+
+Thank you to all of our contributors!
+
+* https://github.com/HT154[@HT154]
+
 [[release-0.1.1]]
 == Release 0.1.1 (2025-12-16)
 

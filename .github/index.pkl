@@ -40,6 +40,8 @@ local readers: Listing<Reader>(isDistinctBy((it) -> it.name)) = new {
   }
 }
 
+triggerPackageDocsBuild = "release"
+
 testReports {
   junit {
     "*/test-results/**/*.xml"
