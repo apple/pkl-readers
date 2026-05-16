@@ -31,6 +31,8 @@ hidden const readerName = "helm"
 
 local const packageVersion = read("VERSION.txt").text.trim()
 
+typealias HookPolicy = *"enabled" | "skip-tests" | "disabled"
+
 abstract class Request {
   fixed kind: String
 
@@ -68,6 +70,18 @@ class Template extends Request {
 
   /// Equivalent to the `--namespace` flag of `helm template`.
   namespace: String(!isEmpty)
+
+  /// Equivalent to the `--kube-version` flag of `helm template`.
+  kubeVersion: String?
+
+  /// Equivalent to the `--api-versions` flag of `helm template`.
+  apiVersions: Listing<String>
+
+  /// Equivalent to the `--skip-schema-validation` flag of `helm template`.
+  skipSchemaValidation: Boolean = false
+
+  /// Equivalent to the `--no-hooks` and `--skip-tests` flags of `helm template`.
+  hooks: HookPolicy
 
   /// The values to use during Helm chart templating.
   ///

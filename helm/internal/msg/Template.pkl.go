@@ -1,6 +1,8 @@
 // Code generated from Pkl module `helm.helm`. DO NOT EDIT.
 package msg
 
+import "github.com/apple/pkl-readers/helm/internal/msg/hookpolicy"
+
 type Template interface {
 	Request
 
@@ -11,6 +13,14 @@ type Template interface {
 	GetReleaseName() string
 
 	GetNamespace() string
+
+	GetKubeVersion() *string
+
+	GetApiVersions() []string
+
+	GetSkipSchemaValidation() bool
+
+	GetHooks() hookpolicy.HookPolicy
 
 	GetValuesJson() string
 }
@@ -37,6 +47,18 @@ type TemplateImpl struct {
 
 	// Equivalent to the `--namespace` flag of `helm template`.
 	Namespace string `pkl:"namespace"`
+
+	// Equivalent to the `--kube-version` flag of `helm template`.
+	KubeVersion *string `pkl:"kubeVersion"`
+
+	// Equivalent to the `--api-versions` flag of `helm template`.
+	ApiVersions []string `pkl:"apiVersions"`
+
+	// Equivalent to the `--skip-schema-validation` flag of `helm template`.
+	SkipSchemaValidation bool `pkl:"skipSchemaValidation"`
+
+	// Equivalent to the `--no-hooks` and `--skip-tests` flags of `helm template`.
+	Hooks hookpolicy.HookPolicy `pkl:"hooks"`
 
 	ValuesJson string `pkl:"valuesJson"`
 }
@@ -68,6 +90,26 @@ func (rcv TemplateImpl) GetReleaseName() string {
 // Equivalent to the `--namespace` flag of `helm template`.
 func (rcv TemplateImpl) GetNamespace() string {
 	return rcv.Namespace
+}
+
+// Equivalent to the `--kube-version` flag of `helm template`.
+func (rcv TemplateImpl) GetKubeVersion() *string {
+	return rcv.KubeVersion
+}
+
+// Equivalent to the `--api-versions` flag of `helm template`.
+func (rcv TemplateImpl) GetApiVersions() []string {
+	return rcv.ApiVersions
+}
+
+// Equivalent to the `--skip-schema-validation` flag of `helm template`.
+func (rcv TemplateImpl) GetSkipSchemaValidation() bool {
+	return rcv.SkipSchemaValidation
+}
+
+// Equivalent to the `--no-hooks` and `--skip-tests` flags of `helm template`.
+func (rcv TemplateImpl) GetHooks() hookpolicy.HookPolicy {
+	return rcv.Hooks
 }
 
 func (rcv TemplateImpl) GetValuesJson() string {
