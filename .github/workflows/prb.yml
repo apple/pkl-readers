@@ -186,6 +186,18 @@ jobs:
         git diff --name-only --exit-code "origin/$BASE_REF" -- basePklProject.pkl .github/** shared/go/** prometheus/**
         echo "prometheus=$?" >> "$GITHUB_OUTPUT"
         echo
+  verdict:
+    if: '!cancelled() && !failure()'
+    needs:
+    - check-pkl-github-actions
+    - check-format-pkl
+    - check-format-go
+    - check-license-headers
+    - test-helm
+    - test-prometheus
+    runs-on: ubuntu-latest
+    steps:
+    - run: 'true'
   upload-event-file:
     runs-on: ubuntu-latest
     steps:
