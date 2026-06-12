@@ -15,7 +15,7 @@ jobs:
   check-format-pkl:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+    - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
       with:
         persist-credentials: false
     - name: Setup Pkl
@@ -37,7 +37,7 @@ jobs:
   check-format-go:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+    - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
       with:
         persist-credentials: false
     - uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6
@@ -58,7 +58,7 @@ jobs:
     name: hawkeye-check
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+    - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
       with:
         ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || '' }}
         persist-credentials: false
@@ -72,7 +72,7 @@ jobs:
     if: startsWith(github.ref_name, 'helm@')
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+    - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
       with:
         persist-credentials: false
     - name: Setup Pkl
@@ -118,7 +118,7 @@ jobs:
     if: startsWith(github.ref_name, 'prometheus@')
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+    - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
       with:
         persist-credentials: false
     - name: Setup Pkl
@@ -164,7 +164,7 @@ jobs:
     if: startsWith(github.ref_name, 'helm@')
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+    - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
       with:
         persist-credentials: false
     - uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6
@@ -250,7 +250,7 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+    - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
       with:
         persist-credentials: false
     - name: Check that tag matches helm/pkl/VERSION.txt
@@ -311,7 +311,7 @@ jobs:
     if: startsWith(github.ref_name, 'prometheus@')
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+    - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
       with:
         persist-credentials: false
     - uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6
@@ -397,7 +397,7 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+    - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
       with:
         persist-credentials: false
     - name: Check that tag matches prometheus/pkl/VERSION.txt
