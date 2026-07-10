@@ -170,3 +170,34 @@ release = (build) {
     }
   }
 }
+
+dependabot {
+  updates {
+    new {
+      `package-ecosystem` = "gomod"
+      cooldown {
+        `default-days` = 7
+        exclude {
+          "github.com/apple/pkl-go"
+        }
+      }
+      schedule {
+        interval = "weekly"
+      }
+      directories {
+        for (reader in readers) {
+          "/" + reader.directory
+        }
+      }
+    }
+  }
+}
+
+codeql {
+  scans {
+    new {
+      language = "go"
+      buildMode = "autobuild"
+    }
+  }
+}

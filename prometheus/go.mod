@@ -1,6 +1,6 @@
 module github.com/apple/pkl-readers/prometheus
 
-go 1.26.0
+go 1.24
 
 replace github.com/apple/pkl-readers/shared/go => ../shared/go
 
