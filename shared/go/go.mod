@@ -1,9 +1,9 @@
 module github.com/apple/pkl-readers/shared/go
 
-go 1.24
+go 1.26.0
 
 require (
-	github.com/apple/pkl-go v0.13.2
+	github.com/apple/pkl-go v0.14.0
 	github.com/spf13/cobra v1.10.2
 	github.com/spf13/pflag v1.0.10
 )

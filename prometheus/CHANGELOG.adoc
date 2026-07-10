@@ -1,5 +1,18 @@
 = pkl-reader-prometheus / pkl.prometheus Changelog
 
+[[release-0.2.1]]
+== Release 0.2.1 (2026-07-10)
+
+=== Fixes
+
+* Ensure compatibility with Pkl 0.32 (https://github.com/apple/pkl-readers/pull/39[#39]).
+
+=== Contributors ❤️
+
+Thank you to all of our contributors!
+
+* https://github.com/HT154[@HT154]
+
 [[release-0.2.0]]
 == Release 0.2.0 (2026-04-29)
 
