@@ -51,5 +51,5 @@ func (r prometheusReader) parse(req promql.Parse) ([]byte, error) {
 	}
 
 	// on success, return empty resource content
-	return nil, nil
+	return []byte{}, nil
 }

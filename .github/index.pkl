@@ -15,8 +15,10 @@
 //===----------------------------------------------------------------------===//
 
 amends "@pkl.impl.ghactions/PklCI.pkl"
+
 import "@com.github.actions/catalog.pkl"
 import "@com.github.actions/context.pkl"
+import "@com.github.actions/Workflow.pkl"
 import "@pkl.impl.ghactions/jobs/HawkeyeCheck.pkl"
 import "@pkl.impl.ghactions/steps/SetupPkl.pkl"
 
@@ -182,12 +184,15 @@ dependabot {
         }
       }
       schedule {
-        interval = "weekly"
+        interval = "quarterly"
       }
       directories {
         for (reader in readers) {
           "/" + reader.directory
         }
+      }
+      groups {
+        ["all"] { `group-by` = "dependency-name" }
       }
     }
   }
@@ -198,6 +203,9 @@ codeql {
     new {
       language = "go"
       buildMode = "autobuild"
+      preSteps {
+        GoReader.setUpRuntimeStep
+      }
     }
   }
 }
