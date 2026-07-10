@@ -1,11 +1,11 @@
 module github.com/apple/pkl-readers/helm
 
-go 1.24
+go 1.26.0
 
 replace github.com/apple/pkl-readers/shared/go => ../shared/go
 
 require (
-	github.com/apple/pkl-go v0.13.2
+	github.com/apple/pkl-go v0.14.0
 	github.com/apple/pkl-readers/shared/go v0.0.0-00010101000000-000000000000
 	helm.sh/helm/v4 v4.1.4
 )

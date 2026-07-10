@@ -22,8 +22,8 @@ github.com/Masterminds/squirrel v1.5.4 h1:uUcX/aBc8O7Fg9kaISIUsHXdKuqehiXAMQTYX8
 github.com/Masterminds/squirrel v1.5.4/go.mod h1:NNaOrjSoIDfDA40n7sr2tPNZRfjzjA400rg+riTZj10=
 github.com/ProtonMail/go-crypto v1.4.1 h1:9RfcZHqEQUvP8RzecWEUafnZVtEvrBVL9BiF67IQOfM=
 github.com/ProtonMail/go-crypto v1.4.1/go.mod h1:e1OaTyu5SYVrO9gKOEhTc+5UcXtTUa+P3uLudwcgPqo=
-github.com/apple/pkl-go v0.13.2 h1:UCug0neH9Ufw0Loujosv5/UUXEXzY76HXbjqYqlPSGI=
-github.com/apple/pkl-go v0.13.2/go.mod h1:Ko3AgXOKd/vVYtsRZgoCZhymymz9RxqCIcfdZhOX85I=
+github.com/apple/pkl-go v0.14.0 h1:+Gd59y2aU/60TpYMiEG4Zn7JWXkU5FtNk+OvcPNfDPg=
+github.com/apple/pkl-go v0.14.0/go.mod h1:Ko3AgXOKd/vVYtsRZgoCZhymymz9RxqCIcfdZhOX85I=
 github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 h1:DklsrG3dyBCFEj5IhUbnKptjxatkF07cF2ak3yi77so=
 github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2/go.mod h1:WaHUgvxTVq04UNunO+XhnAqY/wQc+bxr74GqbsZ/Jqw=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
