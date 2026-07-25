@@ -85,7 +85,6 @@ func New[T any](spec Spec, run func(ctx context.Context, spec Spec, opts *T) err
 
 func printVersion(spec Spec) {
 	var versions []version
-	longestVersion := 0
 	info, ok := debug.ReadBuildInfo()
 	if !ok {
 		panic("failed to read build info")
@@ -94,7 +93,7 @@ func printVersion(spec Spec) {
 	if info.Main.Version != "" && info.Main.Version != "(devel)" && spec.Version == "development" {
 		spec.Version = strings.TrimPrefix(info.Main.Version, "v")
 	}
-	longestVersion = len(spec.Version)
+	longestVersion := len(spec.Version)
 	versions = append(versions, version{spec.Name, spec.Version})
 	versions = append(versions, version{"go", strings.TrimPrefix(info.GoVersion, "go")})
 Pkg:
